@@ -53,6 +53,8 @@ struct InfoView: View {
                         MoreAppsCard()
                     }
                     .padding(.top, 12)
+
+                    AppInfoFooter()
                 }
                 .padding(22)
             }
