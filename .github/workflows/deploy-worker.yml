@@ -25,11 +25,11 @@ jobs:
       WORKER_NAME: stookwijzer-push
       KV_TITLE: stookwijzer-push-subscriptions
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Secrets controleren
         run: |
@@ -50,6 +50,21 @@ jobs:
           [ -n "$ID" ] && [ "$ID" != "null" ] || { echo "::error::KV-namespace niet gevonden/aangemaakt"; exit 1; }
           sed -i "s/^id = .*/id = \"$ID\"/" server/worker/wrangler.toml
           echo "id=$ID" >> "$GITHUB_OUTPUT"
+
+      - name: workers.dev-subdomein controleren of aanmaken
+        run: |
+          API="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain"
+          AUTH="Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+          SUB=$(curl -sS -H "$AUTH" "$API" | jq -r '.result.subdomain // empty')
+          if [ -z "$SUB" ]; then
+            for NAME in lrvdlinden lrvdlinden-apps lrvdlinden-$(date +%s); do
+              OK=$(curl -sS -X PUT -H "$AUTH" -H "Content-Type: application/json" \
+                --data "{\"subdomain\":\"$NAME\"}" "$API" | jq -r '.success')
+              if [ "$OK" = "true" ]; then SUB=$NAME; echo "Subdomein $NAME.workers.dev aangemaakt"; break; fi
+            done
+          fi
+          [ -n "$SUB" ] || { echo "::error::Kon geen workers.dev-subdomein aanmaken"; exit 1; }
+          echo "Subdomein: $SUB.workers.dev"
 
       - name: Worker deployen
         working-directory: server/worker
