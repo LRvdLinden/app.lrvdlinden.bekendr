@@ -1,6 +1,6 @@
 # Stookwijzer (iOS & iPadOS)
 
-**Versie 1.0.0 (build 6)** · bundle-id `nl.lrvdlinden.stookwijzer`
+**Versie 1.0.0 (build 7)** · bundle-id `nl.lrvdlinden.stookwijzer`
 
 SwiftUI-app met het RIVM-stookadvies voor je locatie: geanimeerd splashscreen, verwachting per 6 uur,
 wind en luchtkwaliteit, meerdere plaatsen, iPad-layout met zijbalk, widgets en pushmeldingen bij een codewissel.
