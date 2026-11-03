@@ -49,7 +49,7 @@ Toelichting:
 ## URL's
 - Support: https://lrvdlinden.app
 - Marketing: https://lrvdlinden.app
-- Privacybeleid: **TODO** – zet `metadata/privacy/privacy-policy-nl.txt` online (bijv. https://lrvdlinden.app/stookwijzer/privacy) en vul de URL in
+- Privacybeleid: https://github.com/LRvdLinden/nl.lrvdlinden.stookwijzer/blob/main/PRIVACY.md (bron: `PRIVACY.md` in de repo, NL + EN)
 
 ## Notities voor App Review
 Stookwijzer toont het openbare stookadvies (code geel/oranje/rood) van de RIVM Stookwijzer via de open data van Atlas Leefomgeving. De app is niet van het RIVM en vermeldt dat in de beschrijving en het informatiescherm. Geen account nodig. Test: sta locatie toe of zoek een plaats in Nederland (bijv. "Utrecht"); meldingen via het belletje linksboven (verstuurd bij een codewissel, dus niet direct); widgets via het beginscherm.

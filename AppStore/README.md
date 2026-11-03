@@ -18,6 +18,6 @@ Alle PNG's zijn RGB zonder alfakanaal. De schermen in de mockups zijn **nagebouw
 2. Per taal (Nederlands en Engels) de teksten uit `metadata/<taal>/` invullen
 3. Screenshots uploaden: iPhone 6,9″ en iPad 13″ (de rest schaalt Apple automatisch; 6,3″/6,1″/12,9″ zijn optioneel)
 4. App-privacy invullen volgens `app-info.md`
-5. **Privacybeleid online zetten** en de URL invullen (staat nog op TODO)
+5. Privacybeleid-URL invullen: https://github.com/LRvdLinden/nl.lrvdlinden.stookwijzer/blob/main/PRIVACY.md
 6. Leeftijdsclassificatie, categorie en content rights volgens `app-info.md`
 7. Build 7 kiezen, reviewnotities plakken en indienen
