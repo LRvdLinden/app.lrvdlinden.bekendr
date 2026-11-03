@@ -1,0 +1,99 @@
+STOOKWIJZER – APP STORE CONNECT TEKSTEN
+Versie 1.0.0 (build 5) · bundle-id nl.lrvdlinden.stookwijzer · primaire taal: Nederlands
+======================================================================
+
+## Naam (max 30) — 25 tekens
+Stookwijzer – Stookadvies
+
+## Subtitel (max 30) — 27 tekens
+Kan ik vandaag hout stoken?
+
+## Promotietekst (max 170) — 152 tekens
+Weet in één oogopslag of je je houtkachel of open haard kunt aansteken. Met verwachting per 6 uur, widgets en een pushmelding zodra het code rood wordt.
+
+## Trefwoorden (max 100) — 99 tekens
+stoken,houtkachel,openhaard,RIVM,luchtkwaliteit,code rood,houtstook,rook,fijnstof,kachel,stookalert
+
+## Beschrijving (max 4000) — 1763 tekens
+Kan ik vandaag stoken? Stookwijzer geeft je direct het stookadvies van het RIVM voor jouw locatie: code geel, oranje of rood. Zo weet je wanneer je je houtkachel, open haard of vuurkorf beter uit kunt laten en voorkom je overlast voor je buren.
+
+ADVIES VOOR JOUW PLEK
+• Het actuele advies voor je huidige locatie of een plaats naar keuze
+• Duidelijke uitleg bij elke code: wat betekent het en waarom geldt het nu?
+• Wind (Beaufort en m/s) en luchtkwaliteit (LKI) in één overzicht
+• Zie meteen wanneer de code verandert
+
+VERWACHTING
+• Het advies per blok van 6 uur, voor de komende dagen
+• Definitieve en voorlopige blokken herken je in één oogopslag
+
+PUSHMELDINGEN
+• Een seintje zodra de code voor een van je plaatsen verandert
+• Kies zelf: bij code oranje en rood, of alleen bij code rood
+• Optioneel een melding als het weer code geel wordt
+• Code rood komt binnen als tijdgevoelige melding
+
+WIDGETS
+• Kleine en middelgrote widgets voor je beginscherm
+• Widgets voor het toegangsscherm
+• De kleur wisselt vanzelf mee met de verwachting
+
+MEERDERE PLAATSEN
+• Bewaar thuis, je vakantiehuis of het adres van familie
+• Zoek op plaats, postcode of adres
+
+GEMAAKT VOOR IPHONE EN IPAD
+• Op iPad zie je al je plaatsen in de zijbalk en het advies ernaast
+• Licht en donker thema, geen account nodig, geen advertenties
+
+PRIVACY
+Je locatie wordt alleen gebruikt voor het stookadvies. Zet je meldingen aan, dan worden je plaatsen afgerond op ongeveer 1 kilometer naar onze meldingsserver gestuurd. We verzamelen verder niets en volgen je niet.
+
+OVER DE DATA
+Het advies komt uit de open data van de RIVM Stookwijzer (Atlas Leefomgeving). Deze app is niet van het RIVM of de overheid. Regels voor houtstook verschillen per gemeente; check altijd wat er in jouw gemeente geldt.
+
+## Nieuw in deze versie (max 4000) — 254 tekens
+Eerste versie van Stookwijzer:
+• Stookadvies van het RIVM voor je locatie
+• Verwachting per 6 uur met wind en luchtkwaliteit
+• Pushmeldingen bij code oranje en rood
+• Widgets voor begin- en toegangsscherm
+• Meerdere plaatsen en een speciale iPad-weergave
+
+## Overige velden
+Primaire categorie: Weer
+Secundaire categorie: Lifestyle
+Leeftijdsclassificatie: 4+ (alle vragen 'Nee')
+Prijs: Gratis
+Copyright: 2026 Léon van der Linden
+Support-URL: https://lrvdlinden.app  (of een eigen supportpagina)
+Marketing-URL: https://lrvdlinden.app  (optioneel)
+Privacybeleid-URL: VERPLICHT – nog aanmaken, bv. https://lrvdlinden.app/stookwijzer/privacy
+
+## App-privacy (App Store Connect → App-privacy)
+Verzamelt de app gegevens? Ja
+• Locatie → Globale locatie
+   - Doel: App-functionaliteit
+   - Gekoppeld aan identiteit: Nee
+   - Gebruikt voor tracking: Nee
+Alle andere categorieën: niet verzameld.
+(Toelichting: de exacte locatie blijft op het toestel en gaat alleen naar het RIVM voor het advies; naar de eigen meldingsserver gaan alleen afgeronde coördinaten (~1 km) plus het push-token.)
+
+## Notities voor de App Review
+Stookwijzer toont het openbare stookadvies (code geel/oranje/rood) van de RIVM Stookwijzer via de open data van Atlas Leefomgeving. De app is niet van het RIVM en vermeldt dat in de beschrijving en in het informatiescherm.
+
+Er is geen account nodig. Om te testen:
+1. Sta locatie toe, of tik op 'Zoek een plaats' en zoek bijvoorbeeld 'Utrecht'. Het advies is alleen beschikbaar voor locaties in Nederland.
+2. Tik linksboven op het belletje om pushmeldingen aan te zetten. Meldingen worden verstuurd zodra de code verandert, dus er komt niet meteen een melding.
+3. Widgets: houd het beginscherm ingedrukt → + → Stookwijzer.
+
+## Exportnaleving
+Gebruikt de app versleuteling? Alleen standaard HTTPS → 'Nee' (ITSAppUsesNonExemptEncryption = NO staat al in het project).
+## Afbeeldingen in deze zip
+iPhone-6.9/   6 screenshots 1320 × 2868 (iPhone 6,9″, verplicht; Apple schaalt ze zelf voor kleinere iPhones)
+iPad-13/      3 screenshots 2752 × 2064 (iPad 13″, liggend, verplicht voor iPad)
+*/raw/        dezelfde schermen zonder mockup (voor website of persbericht)
+Icon/         App Store-icoon 1024 × 1024 (zit ook al in het Xcode-project)
+Promo/        1920 × 1080 (In-App Event / banner), 1080 × 1080 (social), 1200 × 630 (link-preview)
+
+Uploaden: App Store Connect → je app → versie 1.0.0 → 'Previews en screenshots' → tab iPhone 6,9″ en iPad 13″ → sleep de bestanden in volgorde 01–06.
