@@ -6,7 +6,7 @@ import UserNotifications
 /// Instellingen voor de meldingsserver (Cloudflare Worker, zie server/worker).
 enum PushConfig {
     /// URL van je gedeployde Worker, bijvoorbeeld https://stookwijzer-push.<jouw-subdomein>.workers.dev
-    static let serverURL = URL(string: "https://stookwijzer-push.example.workers.dev")!
+    static let serverURL = URL(string: "https://stookwijzer-push.lrvdlinden-apps.workers.dev")!
 
     /// Moet gelijk zijn aan het APP_KEY-secret van de Worker. Leeg laten als je geen APP_KEY gebruikt.
     static let appKey = ""

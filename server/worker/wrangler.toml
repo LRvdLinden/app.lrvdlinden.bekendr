@@ -7,7 +7,7 @@ workers_dev = true
 # en vul hieronder het id in dat wrangler teruggeeft.
 [[kv_namespaces]]
 binding = "SUBSCRIPTIONS"
-id = "VUL_HIER_HET_KV_NAMESPACE_ID_IN"
+id = "c50622b0d9ff4f699095082014514bab"
 
 # Secrets (niet in dit bestand!):
 #   npx wrangler secret put ADMIN_TOKEN   # zelfde waarde als GitHub-secret WORKER_ADMIN_TOKEN
