@@ -1,6 +1,6 @@
 # Stookwijzer (iOS & iPadOS)
 
-**Versie 1.0.0 (build 3)** · bundle-id `nl.lrvdlinden.stookwijzer`
+**Versie 1.0.0 (build 4)** · bundle-id `nl.lrvdlinden.stookwijzer`
 
 SwiftUI-app met het RIVM-stookadvies voor je locatie: geanimeerd splashscreen, verwachting per 6 uur,
 wind en luchtkwaliteit, meerdere plaatsen, iPad-layout met zijbalk, widgets en pushmeldingen bij een codewissel.
@@ -28,25 +28,22 @@ GitHub Action (elk uur) ──────────────┘  leest aan
 - Code rood komt binnen als *time-sensitive*; tikken op de melding opent die plaats.
 - Locaties worden afgerond op ~1 km naar de server gestuurd.
 
-### 1. Cloudflare Worker (eenmalig)
-```bash
-cd server/worker
-npx wrangler login
-npx wrangler kv namespace create SUBSCRIPTIONS   # id invullen in wrangler.toml
-npx wrangler secret put ADMIN_TOKEN              # lange willekeurige string, bv. `openssl rand -hex 32`
-npx wrangler secret put APP_KEY                  # optioneel
-npx wrangler deploy
-```
-Zet daarna de Worker-URL in `Stookwijzer/Services/PushManager.swift` → `PushConfig.serverURL` en, als je APP_KEY gebruikt, dezelfde waarde in `appKey`.
+### 1. GitHub-secrets (het enige handwerk)
+*Settings → Secrets and variables → Actions → New repository secret*
 
-### 2. GitHub-secrets
 | Secret | Waarde |
 |---|---|
 | `APN_TEAM_ID` | je Apple Team ID |
 | `APN_KEY_ID` | Key ID van de APNs-sleutel |
-| `APN_P8_CERT` | volledige inhoud van het `.p8`-bestand (base64 mag ook) |
-| `WORKER_URL` | bv. `https://stookwijzer-push.<subdomein>.workers.dev` |
-| `WORKER_ADMIN_TOKEN` | dezelfde waarde als `ADMIN_TOKEN` in de Worker |
+| `APN_P8_CERT` | volledige inhoud van het `.p8`-bestand |
+| `CLOUDFLARE_API_TOKEN` | API-token met de template *Edit Cloudflare Workers* |
+| `CLOUDFLARE_ACCOUNT_ID` | Account ID uit het Cloudflare-dashboard |
+
+### 2. Automatisch
+- **Deploy meldingsserver** (`deploy-worker.yml`) maakt de KV-opslag aan, deployt de Worker, zet het admin-token
+  (afgeleid van het Cloudflare-token) en schrijft de Worker-URL in `PushConfig.serverURL` in de app.
+  Draait bij wijzigingen in `server/worker/` of handmatig via *Run workflow*.
+- **Stookwijzer pushmeldingen** (`stookwijzer-push.yml`) draait elk uur en bepaalt URL en token zelf.
 
 ### 3. Testen
 - *Actions → Stookwijzer pushmeldingen → Run workflow*:

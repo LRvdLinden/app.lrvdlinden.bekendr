@@ -203,7 +203,10 @@ async function sendTest() {
 
 async function main() {
   if (env.TEST_TOKEN) return sendTest();
-  if (!env.WORKER_URL || !env.WORKER_ADMIN_TOKEN) throw new Error("WORKER_URL of WORKER_ADMIN_TOKEN ontbreekt");
+  if (!env.WORKER_URL || !env.WORKER_ADMIN_TOKEN) {
+    console.log("Meldingsserver nog niet geconfigureerd (Cloudflare-secrets ontbreken), niets te doen");
+    return;
+  }
 
   const { subscriptions } = await worker("/subscriptions");
   console.log(`${subscriptions.length} aanmelding(en)`);
