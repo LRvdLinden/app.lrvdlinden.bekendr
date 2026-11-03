@@ -44,6 +44,15 @@ struct InfoView: View {
                     Text("Deze app is niet van het RIVM. Het advies komt rechtstreeks uit de open data van de RIVM Stookwijzer.")
                         .font(.footnote)
                         .foregroundStyle(Theme.muted)
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(MoreAppsText.current.section.uppercased())
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+                            .padding(.leading, 4)
+                        MoreAppsCard()
+                    }
+                    .padding(.top, 12)
                 }
                 .padding(22)
             }

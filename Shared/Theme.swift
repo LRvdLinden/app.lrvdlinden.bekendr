@@ -10,6 +10,14 @@ extension Color {
                   opacity: opacity)
     }
 
+    /// Kleur met dark-mode-variant (zelfde helper als in Homey Store `Core/Theme.swift`).
+    init(light: UInt32, dark: UInt32) {
+        self.init(uiColor: UIColor { trait in
+            let v = trait.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: CGFloat((v >> 16) & 0xFF) / 255, green: CGFloat((v >> 8) & 0xFF) / 255, blue: CGFloat(v & 0xFF) / 255, alpha: 1)
+        })
+    }
+
     /// Kleur die meebeweegt met licht/donker.
     static func dynamic(light: UInt32, dark: UInt32) -> Color {
         Color(UIColor { trait in

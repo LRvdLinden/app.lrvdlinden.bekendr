@@ -55,6 +55,7 @@ struct PhoneLayout: View {
     @State private var showInfo = false
     @State private var showManage = false
     @State private var showNotifications = false
+    @Environment(\.splashVisible) private var splashVisible
 
     var body: some View {
         NavigationStack {
@@ -87,6 +88,8 @@ struct PhoneLayout: View {
             .sheet(isPresented: $showManage) { ManagePlacesView() }
             .sheet(isPresented: $showNotifications) { NotificationSettingsView() }
         }
+        .reviewPrompt(isCalm: !splashVisible && !showSearch && !showInfo && !showManage && !showNotifications
+                      && places.selected != nil)
     }
 }
 
@@ -155,6 +158,7 @@ struct SplitLayout: View {
     @State private var showSearch = false
     @State private var showInfo = false
     @State private var showNotifications = false
+    @Environment(\.splashVisible) private var splashVisible
 
     var body: some View {
         @Bindable var places = places
@@ -217,6 +221,8 @@ struct SplitLayout: View {
         .sheet(isPresented: $showSearch) { PlaceSearchView() }
         .sheet(isPresented: $showInfo) { InfoView() }
         .sheet(isPresented: $showNotifications) { NotificationSettingsView() }
+        .reviewPrompt(isCalm: !splashVisible && !showSearch && !showInfo && !showNotifications
+                      && places.selected != nil)
     }
 }
 

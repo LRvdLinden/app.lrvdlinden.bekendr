@@ -25,6 +25,7 @@ struct RootView: View {
                 .environment(advice)
                 .environment(location)
                 .environment(PushManager.shared)
+                .environment(\.splashVisible, showSplash)
                 .opacity(showSplash ? 0 : 1)
 
             if showSplash {

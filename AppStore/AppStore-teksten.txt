@@ -1,5 +1,5 @@
 STOOKWIJZER – APP STORE CONNECT TEKSTEN
-Versie 1.0.0 (build 5) · bundle-id nl.lrvdlinden.stookwijzer · primaire taal: Nederlands
+Versie 1.0.0 (build 6) · bundle-id nl.lrvdlinden.stookwijzer · primaire taal: Nederlands
 ======================================================================
 
 ## Naam (max 30) — 25 tekens
