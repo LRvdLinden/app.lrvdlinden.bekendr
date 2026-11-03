@@ -5,6 +5,7 @@ const fs = require('fs');
 const { logo, defs } = require('./flame.js');
 
 const OUT = process.argv[2];
+const ICON_PATH = process.argv[3];
 const F = (w) => `file://${path.join(__dirname, 'node_modules/@fontsource/nunito/files', `nunito-latin-${w}-normal.woff2`)}`;
 
 // ------------------------------------------------------------------ data
@@ -39,10 +40,10 @@ const flameSvg = (w) => `<svg width="${w}" height="${w * 1.25}" viewBox="0 0 ${w
 
 // ------------------------------------------------------------------ css
 const css = `
-@font-face{font-family:Rounded;src:url(${F(600)});font-weight:600}
-@font-face{font-family:Rounded;src:url(${F(700)});font-weight:700}
-@font-face{font-family:Rounded;src:url(${F(800)});font-weight:800}
-@font-face{font-family:Rounded;src:url(${F(900)});font-weight:900}
+@font-face{font-family:Rounded,Inter,sans-serif;src:url(${F(600)});font-weight:600}
+@font-face{font-family:Rounded,Inter,sans-serif;src:url(${F(700)});font-weight:700}
+@font-face{font-family:Rounded,Inter,sans-serif;src:url(${F(800)});font-weight:800}
+@font-face{font-family:Rounded,Inter,sans-serif;src:url(${F(900)});font-weight:900}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
 .r{font-family:Rounded,Inter,sans-serif}
@@ -62,11 +63,11 @@ body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;o
 .stats{display:grid;gap:12px}
 .st{padding:14px;border-radius:20px}
 .st small{display:flex;gap:5px;align-items:center;color:var(--muted);font-weight:600;font-size:12px;white-space:nowrap}
-.st b{display:block;font-size:21px;margin:5px 0 2px;font-family:Rounded}
+.st b{display:block;font-size:21px;margin:5px 0 2px;font-family:Rounded,Inter,sans-serif}
 .st span{color:var(--muted);font-size:12px}
 .fc{padding:20px}
 .fh{display:flex;justify-content:space-between;align-items:baseline}
-.fh h3{font-size:21px;font-family:Rounded;font-weight:800}
+.fh h3{font-size:21px;font-family:Rounded,Inter,sans-serif;font-weight:800}
 .fh small{font-size:12px;color:var(--muted);font-weight:500}
 .row{display:flex;gap:10px;margin-top:14px}
 .fp{width:74px;flex:none;border-radius:18px;background:var(--bg);padding:12px 0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px}
@@ -76,7 +77,7 @@ body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;o
 .fp.now{color:#fff}.fp.now small,.fp.now i{color:rgba(255,255,255,.85)}
 .bar{display:flex;gap:3px;margin-top:16px}.bar span{flex:1;height:8px;border-radius:4px}
 .leg{display:flex;gap:14px;margin-top:12px;font-size:12px;color:var(--muted)}
-.lg{padding:20px}.lg h3{font-size:21px;font-family:Rounded;font-weight:800;margin-bottom:14px}
+.lg{padding:20px}.lg h3{font-size:21px;font-family:Rounded,Inter,sans-serif;font-weight:800;margin-bottom:14px}
 .li{display:flex;gap:14px;margin-bottom:14px}.li:last-child{margin-bottom:0}
 .lic{width:40px;height:40px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center}
 .li b{font-size:15px;font-weight:600}.li p{font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:3px}
@@ -315,51 +316,94 @@ function promo(w, h) {
   </div>`;
 }
 
+// ------------------------------------------------------------------ teksten NL / EN
+// De app zelf is Nederlandstalig: de schermen blijven NL, de koppen volgen de store-taal.
+const TXT = {
+  'nl-NL': {
+    iphone: [
+      ['01_advies', BG.warm, 'Kan ik vandaag<br>stoken?', 'Het stookadvies van het RIVM<br>voor jouw locatie.', 'home'],
+      ['02_verwachting', BG.amber, 'Weet wat er komt', 'Verwachting per 6 uur, met wind<br>en luchtkwaliteit.', 'forecast'],
+      ['03_meldingen', BG.red, 'Een seintje<br>bij code rood', 'Pushmelding zodra de code<br>voor jouw plek verandert.', 'lock'],
+      ['04_widgets', BG.peach, 'Altijd in beeld', 'Widgets voor je beginscherm<br>en toegangsscherm.', 'widgets'],
+      ['05_plaatsen', BG.warm, 'Al je plaatsen', 'Thuis, het vakantiehuis<br>of bij familie.', 'places'],
+      ['06_instellingen', BG.amber, 'Jij bepaalt wanneer', 'Meldingen bij oranje en rood,<br>of alleen bij rood.', 'notifications'],
+    ],
+    ipad: [
+      ['01_overzicht', BG.warm, 'Gemaakt voor iPad', 'Al je plaatsen in de zijbalk, het advies ernaast.', ['o', 'Apeldoorn']],
+      ['02_code-rood', BG.red, 'Code rood? Je ziet het meteen', 'Grote, duidelijke kleuren en een verwachting per 6 uur.', ['r', 'Deventer']],
+      ['03_meldingen', BG.amber, 'Meldingen die bij je passen', 'Kies zelf bij welke code je een seintje krijgt.', ['y', 'Epe', true]],
+    ],
+    hero: { tag: 'Kan ik vandaag<br>stoken?', sub: 'Stookadvies van het RIVM voor jouw plek,<br>met widgets en pushmeldingen bij code rood.' },
+  },
+  'en-US': {
+    iphone: [
+      ['01_advice', BG.warm, 'Can I burn wood<br>today?', 'RIVM wood-burning advice<br>for your location.', 'home'],
+      ['02_forecast', BG.amber, 'See what’s coming', 'Forecast in 6-hour blocks,<br>with wind and air quality.', 'forecast'],
+      ['03_alerts', BG.red, 'A heads-up<br>on code red', 'A push notification as soon as<br>the code for your place changes.', 'lock'],
+      ['04_widgets', BG.peach, 'Always in view', 'Widgets for your Home Screen<br>and Lock Screen.', 'widgets'],
+      ['05_places', BG.warm, 'All your places', 'Home, the holiday cottage<br>or your family.', 'places'],
+      ['06_settings', BG.amber, 'You decide when', 'Alerts for orange and red,<br>or for red only.', 'notifications'],
+    ],
+    ipad: [
+      ['01_overview', BG.warm, 'Made for iPad', 'All your places in the sidebar, the advice right beside it.', ['o', 'Apeldoorn']],
+      ['02_code-red', BG.red, 'Code red? You’ll see it instantly', 'Big, clear colours and a forecast in 6-hour blocks.', ['r', 'Deventer']],
+      ['03_alerts', BG.amber, 'Alerts that suit you', 'Choose which code gives you a heads-up.', ['y', 'Epe', true]],
+    ],
+    hero: { tag: 'Can I burn wood<br>today?', sub: 'RIVM wood-burning advice for your place,<br>with widgets and alerts on code red.' },
+  },
+};
+const CODE_LABEL = { 'nl-NL': ['Code geel', 'Code oranje', 'Code rood'], 'en-US': ['Code yellow', 'Code orange', 'Code red'] };
+
+// ------------------------------------------------------------------ hero (header / search assets)
+// Ontworpen op basis-hoogte 1080 css; breedte volgt de beeldverhouding.
+function marketingHero(w, h, lang) {
+  const t = TXT[lang].hero;
+  const showIpad = w / h >= 1.6;
+  return `<div style="width:${w}px;height:${h}px;background:linear-gradient(135deg,#FFF8F1 0%,#FDDCC4 100%);position:relative;overflow:hidden;display:flex;align-items:center">
+    <div style="position:absolute;width:1100px;height:1100px;right:${w * 0.08}px;top:${h * 0.05}px;background:radial-gradient(circle,rgba(247,107,21,.22),transparent 62%)"></div>
+    <div style="position:relative;flex:none;width:${Math.min(w * 0.46, 900)}px;margin-left:${w * 0.06}px">
+      <div style="display:flex;gap:26px;align-items:center"><img src="ICON" style="width:130px;height:130px;border-radius:29px;box-shadow:0 14px 30px rgba(247,107,21,.3)"/>
+      <div class="r" style="font-size:72px;font-weight:900;color:#2A2320">Stookwijzer</div></div>
+      <div class="r" style="font-size:66px;font-weight:800;color:#2A2320;margin-top:44px;line-height:1.08">${t.tag}</div>
+      <div style="font-size:30px;color:#7D6A5F;margin-top:22px;line-height:1.4">${t.sub}</div>
+      <div style="display:flex;gap:14px;margin-top:36px;flex-wrap:wrap">${['y', 'o', 'r'].map((k, i) => `<span style="display:inline-flex;gap:10px;align-items:center;background:#fff;border-radius:30px;padding:12px 22px 12px 12px;font-weight:700;font-size:22px;color:${C[k].text};box-shadow:0 6px 16px rgba(0,0,0,.06)"><span style="width:38px;height:38px;border-radius:50%;background:${grad(k)};display:flex;align-items:center;justify-content:center">${ico[k](20)}</span>${CODE_LABEL[lang][i]}</span>`).join('')}</div>
+    </div>
+    <div style="position:relative;flex:1;height:100%">
+      ${showIpad ? `<div style="position:absolute;right:${-w * 0.03}px;top:${h * 0.16}px">${ipadFrame(ipad('o', 'Apeldoorn'), (h * 0.62) / 1076)}</div>` : ''}
+      <div style="position:absolute;${showIpad ? `right:${w * 0.25}px` : `right:${w * 0.08}px`};top:${h * 0.1}px">${iphoneFrame(phone.home(), (h * 0.95) / 984)}</div>
+    </div></div>`;
+}
+
 // ------------------------------------------------------------------ render
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  const icon = 'data:image/png;base64,' + fs.readFileSync(process.argv[3]).toString('base64');
+  const icon = 'data:image/png;base64,' + fs.readFileSync(ICON_PATH).toString('base64');
   const browser = await chromium.launch();
   const render = async (html, w, h, scale, file) => {
+    fs.mkdirSync(path.dirname(path.join(OUT, file)), { recursive: true });
     const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: scale });
     await page.setContent(`<!doctype html><html><head><style>${css}</style></head><body>${html.replace(/ICON/g, icon)}</body></html>`, { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => { await document.fonts.load('800 20px Rounded'); await document.fonts.load('700 20px Rounded'); await document.fonts.ready; });
+    await page.waitForTimeout(150);
     await page.screenshot({ path: path.join(OUT, file), type: 'png' });
     await page.close();
     console.log(file);
   };
 
-  // iPhone 6.9" — 1320 x 2868 (440 x 956 @3x)
-  const S = 0.86, top = 70;
-  const iphoneSlides = [
-    ['01', BG.warm, 'Kan ik vandaag<br>stoken?', 'Het stookadvies van het RIVM<br>voor jouw locatie.', phone.home()],
-    ['02', BG.amber, 'Weet wat er komt', 'Verwachting per 6 uur, met wind<br>en luchtkwaliteit.', phone.forecast()],
-    ['03', BG.red, 'Een seintje<br>bij code rood', 'Pushmelding zodra de code<br>voor jouw plek verandert.', phone.lock()],
-    ['04', BG.peach, 'Altijd in beeld', 'Widgets voor je beginscherm<br>en toegangsscherm.', phone.widgets()],
-    ['05', BG.warm, 'Al je plaatsen', 'Thuis, het vakantiehuis<br>of bij familie.', phone.places()],
-    ['06', BG.amber, 'Jij bepaalt wanneer', 'Meldingen bij oranje en rood,<br>of alleen bij rood.', phone.notifications()],
-  ];
-  for (const [n, bg, h, s, scr] of iphoneSlides) {
-    await render(slide(440, 956, bg, h, s, `<div style="margin-bottom:-135px">${iphoneFrame(scr, S)}</div>`, top), 440, 956, 3, `iPhone-6.9/iPhone_6.9_${n}.png`);
+  for (const lang of Object.keys(TXT)) {
+    // iPhone-basis: 1320 x 2868 (440 x 956 @3x); kleinere formaten worden daaruit geschaald
+    for (const [n, bg, h, s, scr] of TXT[lang].iphone) {
+      await render(slide(440, 956, bg, h, s, `<div style="margin-bottom:-135px">${iphoneFrame(phone[scr](), 0.86)}</div>`, 70), 440, 956, 3, `${lang}/iphone/${n}.png`);
+    }
+    // iPad-basis: 2752 x 2064 (1376 x 1032 @2x, liggend)
+    for (const [n, bg, h, s, args] of TXT[lang].ipad) {
+      await render(slide(1376, 1032, bg, h, s, `<div style="margin-bottom:-40px">${ipadFrame(ipad(...args), 0.8)}</div>`, 56), 1376, 1032, 2, `${lang}/ipad/${n}.png`);
+    }
+    // Marketing: header 5244x2950 + 3840x1646, search 3840x2560 (+1920x1280 geschaald)
+    for (const [name, W, H] of [['header_5244x2950', 5244, 2950], ['header_3840x1646', 3840, 1646], ['search_3840x2560', 3840, 2560]]) {
+      const cssH = 1080, cssW = Math.round(1080 * W / H);
+      await render(marketingHero(cssW, cssH, lang), cssW, cssH, H / cssH, `${lang}/marketing/${name}.png`);
+    }
   }
-  // Ruwe schermen (zonder mockup) — handig voor reviews of website
-  for (const [n, , , , scr] of iphoneSlides) await render(scr, 440, 956, 3, `iPhone-6.9/raw/iPhone_raw_${n}.png`);
-
-  // iPad 13" — 2752 x 2064 (1376 x 1032 @2x), liggend
-  const ipadSlides = [
-    ['01', BG.warm, 'Gemaakt voor iPad', 'Al je plaatsen in de zijbalk, het advies ernaast.', ipad('o', 'Apeldoorn')],
-    ['02', BG.red, 'Code rood? Je ziet het meteen', 'Grote, duidelijke kleuren en een verwachting per 6 uur.', ipad('r', 'Deventer')],
-    ['03', BG.amber, 'Meldingen die bij je passen', 'Kies zelf bij welke code je een seintje krijgt.', ipad('y', 'Epe', true)],
-  ];
-  for (const [n, bg, h, s, scr] of ipadSlides) {
-    await render(slide(1376, 1032, bg, h, s, `<div style="margin-bottom:-40px">${ipadFrame(scr, 0.8)}</div>`, 56), 1376, 1032, 2, `iPad-13/iPad_13_${n}.png`);
-  }
-  for (const [n, , , , scr] of ipadSlides) await render(scr, 1376, 1032, 2, `iPad-13/raw/iPad_raw_${n}.png`);
-
-  // Promo
-  await render(promo(1920, 1080), 1920, 1080, 1, 'Promo/Promo_1920x1080.png');
-  await render(promo(1080, 1080), 1080, 1080, 1, 'Promo/Promo_1080x1080.png');
-  await render(`<div style="width:1200px;height:630px;overflow:hidden"><div style="transform:scale(.625);transform-origin:0 0">${promo(1920, 1008)}</div></div>`, 1200, 630, 1, 'Promo/Social_1200x630.png');
-
   await browser.close();
 })();

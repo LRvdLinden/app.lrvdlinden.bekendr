@@ -1,0 +1,20 @@
+Stookwijzer Privacy Policy
+Last updated: 3 November 2026
+
+Stookwijzer is made by Léon van der Linden (lrvdlinden.app). We care about your privacy and collect as little as possible.
+
+What data do we use?
+• Location: if you allow it, the app uses your location to fetch the wood-burning advice for your place from the RIVM open data (Atlas Leefomgeving). We do not store your exact location.
+• Saved places: places you add are stored on your device only.
+• Push notifications: if you turn on notifications, we send an anonymous Apple push token and your places, rounded to about 1 kilometre, to our notification server (Cloudflare Workers, EU/US). We use them only to notify you when the burn code changes. Turning notifications off deletes this data. Tokens that Apple reports as invalid are removed automatically.
+
+What we don't do
+• No account, no ads, no analytics or tracking, no selling or sharing of data with third parties.
+
+Third parties
+• RIVM / Atlas Leefomgeving: receives the coordinates of the place you request advice for.
+• Apple Push Notification service: delivers the notifications.
+• Cloudflare: hosts the notification server.
+
+Your rights
+You can turn off notifications in the app at any time, which removes your data from the server. Questions? Get in touch via lrvdlinden.app.

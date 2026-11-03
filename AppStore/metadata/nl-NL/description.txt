@@ -1,0 +1,39 @@
+Kan ik vandaag stoken? Stookwijzer geeft je direct het stookadvies van het RIVM voor jouw locatie: code geel, oranje of rood. Zo weet je wanneer je je houtkachel, open haard of vuurkorf beter uit kunt laten en voorkom je overlast voor je buren.
+
+ADVIES VOOR JOUW PLEK
+• Het actuele advies voor je huidige locatie of een plaats naar keuze
+• Duidelijke uitleg bij elke code: wat betekent het en waarom geldt het nu?
+• Wind (Beaufort en m/s) en luchtkwaliteit (LKI) in één overzicht
+• Zie meteen wanneer de code verandert
+
+VERWACHTING
+• Het advies per blok van 6 uur, voor de komende dagen
+• Definitieve en voorlopige blokken herken je in één oogopslag
+
+PUSHMELDINGEN
+• Een seintje zodra de code voor een van je plaatsen verandert
+• Kies zelf: bij code oranje en rood, of alleen bij code rood
+• Optioneel een melding als het weer code geel wordt
+• Code rood komt binnen als tijdgevoelige melding
+
+WIDGETS
+• Kleine en middelgrote widgets voor je beginscherm
+• Widgets voor het toegangsscherm
+• De kleur wisselt vanzelf mee met de verwachting
+
+MEERDERE PLAATSEN
+• Bewaar thuis, je vakantiehuis of het adres van familie
+• Zoek op plaats, postcode of adres
+
+GEMAAKT VOOR IPHONE EN IPAD
+• Op iPad zie je al je plaatsen in de zijbalk en het advies ernaast
+• Licht en donker thema, geen account nodig, geen advertenties
+
+PRIVACY
+Je locatie wordt alleen gebruikt voor het stookadvies. Zet je meldingen aan, dan worden je plaatsen afgerond op ongeveer 1 kilometer naar onze meldingsserver gestuurd. We verzamelen verder niets en volgen je niet.
+
+OVER DE DATA
+Het advies komt uit de open data van de RIVM Stookwijzer (Atlas Leefomgeving). Deze app is niet van het RIVM of de overheid. Regels voor houtstook verschillen per gemeente; check altijd wat er in jouw gemeente geldt.
+
+MEER APPS
+Meer apps van de ontwikkelaar voor iPhone, iPad, Apple TV en Homey vind je op lrvdlinden.app.

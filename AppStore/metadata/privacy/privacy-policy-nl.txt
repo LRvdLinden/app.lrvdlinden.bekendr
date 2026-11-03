@@ -1,0 +1,20 @@
+Privacybeleid Stookwijzer
+Laatst bijgewerkt: 3 november 2026
+
+Stookwijzer wordt gemaakt door Léon van der Linden (lrvdlinden.app). We vinden je privacy belangrijk en verzamelen zo weinig mogelijk.
+
+Welke gegevens gebruiken we?
+• Locatie: als je dat toestaat, gebruikt de app je locatie om het stookadvies voor jouw plek op te halen bij de open data van het RIVM (Atlas Leefomgeving). Je exacte locatie wordt niet door ons opgeslagen.
+• Opgeslagen plaatsen: plaatsen die je toevoegt, worden alleen op je toestel bewaard.
+• Pushmeldingen: zet je meldingen aan, dan sturen we een anoniem push-token van Apple en je plaatsen, afgerond op ongeveer 1 kilometer, naar onze meldingsserver (Cloudflare Workers, EU/VS). Die gebruiken we alleen om je een melding te sturen als de stookcode verandert. Zet je meldingen uit, dan worden deze gegevens verwijderd. Tokens die Apple als ongeldig meldt, worden automatisch gewist.
+
+Wat doen we niet?
+• Geen account, geen advertenties, geen analytics of tracking, geen verkoop of delen van gegevens met derden.
+
+Derden
+• RIVM / Atlas Leefomgeving: ontvangt de coördinaten van de plek waarvoor je advies opvraagt.
+• Apple Push Notification service: bezorgt de meldingen.
+• Cloudflare: host de meldingsserver.
+
+Je rechten
+Je kunt meldingen op elk moment uitzetten in de app; daarmee verwijder je je gegevens van de server. Vragen? Neem contact op via lrvdlinden.app.
