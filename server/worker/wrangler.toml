@@ -1,0 +1,13 @@
+name = "stookwijzer-push"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# Maak de namespace aan met:  npx wrangler kv namespace create SUBSCRIPTIONS
+# en vul hieronder het id in dat wrangler teruggeeft.
+[[kv_namespaces]]
+binding = "SUBSCRIPTIONS"
+id = "VUL_HIER_HET_KV_NAMESPACE_ID_IN"
+
+# Secrets (niet in dit bestand!):
+#   npx wrangler secret put ADMIN_TOKEN   # zelfde waarde als GitHub-secret WORKER_ADMIN_TOKEN
+#   npx wrangler secret put APP_KEY       # optioneel, zelfde waarde als PushConfig.appKey in de app

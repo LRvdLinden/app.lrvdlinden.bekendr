@@ -1,0 +1,8 @@
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+node_modules/
+.wrangler/
+server/worker/.dev.vars

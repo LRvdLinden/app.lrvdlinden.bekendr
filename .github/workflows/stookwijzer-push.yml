@@ -1,0 +1,52 @@
+name: Stookwijzer pushmeldingen
+
+on:
+  schedule:
+    # Elk uur op minuut 7 (UTC). GitHub kan geplande runs enkele minuten vertragen.
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Alleen loggen, niets versturen"
+        type: boolean
+        default: false
+      test_token:
+        description: "Optioneel: stuur één testmelding naar dit device-token"
+        type: string
+        default: ""
+      test_env:
+        description: "Omgeving voor de testmelding"
+        type: choice
+        options: [sandbox, production]
+        default: sandbox
+
+concurrency:
+  group: stookwijzer-push
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Advies controleren en meldingen versturen
+        run: node scripts/send-push.mjs
+        env:
+          APN_TEAM_ID: ${{ secrets.APN_TEAM_ID }}
+          APN_KEY_ID: ${{ secrets.APN_KEY_ID }}
+          APN_P8_CERT: ${{ secrets.APN_P8_CERT }}
+          APN_TOPIC: nl.lrvdlinden.stookwijzer
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          WORKER_ADMIN_TOKEN: ${{ secrets.WORKER_ADMIN_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          TEST_TOKEN: ${{ inputs.test_token }}
+          TEST_ENV: ${{ inputs.test_env }}
