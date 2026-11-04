@@ -1,0 +1,29 @@
+1. SCREEN RECORDING
+Screen recording on a physical iPhone running the latest iOS (attached to this submission / available here: [LINK TO VIDEO]). It starts with launching the app and shows: the launch screen, granting location permission, the current advice for the user's location, the 6-hour forecast, adding and switching places via search, enabling push notifications, the info screen, and adding the widget to the Home Screen.
+The app has no account registration or login, no user-generated content and no paid content or In-App Purchases.
+
+2. PURPOSE AND TARGET AUDIENCE
+Stookwijzer helps people in the Netherlands who own a wood stove, fireplace or fire pit decide whether it is a good moment to burn wood. It shows the official wood-burning advice ("stookadvies") published by the Dutch National Institute for Public Health and the Environment (RIVM): code yellow, orange or red, based on wind speed and air quality. When smoke disperses poorly, wood burning causes nuisance and health complaints for neighbours, and several municipalities can fine residents for burning during code orange or red. The app makes this advice easy to check for your own location, shows the forecast in 6-hour blocks, offers widgets and sends an optional push notification when the code changes.
+
+3. HOW TO USE THE APP
+No login or setup is required.
+- Open the app and allow location access, or tap "Zoek een plaats" (search a place) and enter a Dutch town, e.g. "Utrecht" or "Apeldoorn". The advice for that place appears immediately.
+- Tap the place name at the top to switch places or add more (on iPad: use the sidebar).
+- Tap the bell icon (top left) to enable push notifications and choose when to receive them. Notifications are sent only when the advice code changes, so one may not arrive during review.
+- Tap the info icon (top right) for an explanation of the codes.
+- Widgets: long-press the Home Screen, tap +, search "Stookwijzer".
+Note: the app interface is in Dutch.
+
+4. EXTERNAL SERVICES
+- RIVM Atlas Leefomgeving (data.rivm.nl): public open-data map service providing the wood-burning advice, wind and air-quality index.
+- Apple MapKit (MKLocalSearch / CLGeocoder): searching places and naming the current location.
+- Apple Push Notification service: delivering notifications.
+- Cloudflare Workers (developer-operated): stores the anonymous push token and the user's places rounded to about 1 km, only when notifications are enabled.
+- GitHub Actions (developer-operated): checks the advice hourly and sends the notifications.
+No analytics, advertising, authentication, payment or AI services are used.
+
+5. REGIONAL DIFFERENCES
+The RIVM advice only covers the Netherlands. For locations outside the Netherlands the app shows a message that no advice is available. All features work the same everywhere; the intended audience is people in the Netherlands.
+
+6. THIRD-PARTY MATERIAL
+The advice is public open data published by RIVM, the Dutch government institute, for free public use through Atlas Leefomgeving; the app credits the source on the main screen and in the info screen. The app is independent: it states clearly in the app and in the description that it is not made by or affiliated with RIVM or the Dutch government. The app does not operate in a regulated industry.
