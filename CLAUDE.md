@@ -7,5 +7,6 @@
 - Apple niet in de simulator testen; Léon test zelf.
 - Taal van UI en documentatie: alleen Nederlands.
 - Geen eigen server. Data: KOOP SRU (`repository.overheid.nl/sru`) en PDOK Locatieserver.
+- Android-APK altijd met dezelfde sleutel: `android/signing/bekendr.jks.enc`, ontgrendeld met repo-secret `APN_P8_CERT` (nooit verwijderen of wijzigen). Nooit een nieuwe sleutel maken.
 - Android is alleen lokaal (geen sync). Apple synchroniseert via iCloud (SwiftData + CloudKit, container `iCloud.app.lrvdlinden.bekendr`).
 - Standaarden uit de skill `lrvdlinden-app-defaults`: MoreAppsCard, AppInfoFooter, review-prompt, privacy manifest, Weergave-keuze.

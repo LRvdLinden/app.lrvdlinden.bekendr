@@ -27,37 +27,47 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: gradle/actions/setup-gradle@v4
-      - name: Ondertekensleutel klaarzetten (als de secret bestaat)
+      - name: Vaste ondertekensleutel
+        # De sleutel staat versleuteld in android/signing/bekendr.jks.enc en wordt ontgrendeld met de
+        # bestaande repo-secret APN_P8_CERT. Ontbreekt het bestand nog, dan wordt hij één keer aangemaakt.
         env:
-          KEYSTORE_B64: ${{ secrets.BEKENDR_KEYSTORE_BASE64 }}
+          SEED: ${{ secrets.APN_P8_CERT }}
         run: |
-          if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/bekendr.jks"
-            echo "BEKENDR_KEYSTORE_PATH=$RUNNER_TEMP/bekendr.jks" >> "$GITHUB_ENV"
-            echo "Eigen sleutel gebruikt."
+          if [ -z "$SEED" ]; then echo "::error::De secret APN_P8_CERT ontbreekt; zonder die secret kan de vaste sleutel niet worden ontgrendeld."; exit 1; fi
+          PASS=$(printf '%s' "$SEED" | sha256sum | cut -c1-40)
+          echo "::add-mask::$PASS"
+          F=signing/bekendr.jks.enc
+          if [ ! -f "$F" ]; then
+            mkdir -p signing
+            keytool -genkeypair -keystore "$RUNNER_TEMP/bekendr.jks" -storetype PKCS12 -alias bekendr -keyalg RSA -keysize 4096 \
+              -validity 36500 -storepass "$PASS" -keypass "$PASS" -dname "CN=Leon van der Linden, O=LRvdLinden, C=NL" >/dev/null 2>&1
+            PASS="$PASS" openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in "$RUNNER_TEMP/bekendr.jks" -out "$F" -pass env:PASS
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add "$F"
+            git commit -m "Android: vaste ondertekensleutel (versleuteld)"
+            git pull --rebase -q origin main && git push -q origin HEAD:main
+            echo "Nieuwe vaste sleutel aangemaakt en versleuteld bewaard."
           else
-            echo "::warning::Geen BEKENDR_KEYSTORE_BASE64-secret: de APK is ondertekend met een tijdelijke sleutel. Updates over een eerdere versie heen lukken dan niet."
-            keytool -genkeypair -keystore "$RUNNER_TEMP/tijdelijk.jks" -storetype PKCS12 -alias bekendr -keyalg RSA -keysize 2048 \
-              -validity 3650 -storepass tijdelijk -keypass tijdelijk -dname "CN=Bekendr tijdelijk" >/dev/null 2>&1
-            {
-              echo "BEKENDR_KEYSTORE_PATH=$RUNNER_TEMP/tijdelijk.jks"
-              echo "BEKENDR_TEMP_KEY=1"
-            } >> "$GITHUB_ENV"
+            PASS="$PASS" openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in "$F" -out "$RUNNER_TEMP/bekendr.jks" -pass env:PASS
+            echo "Vaste sleutel ontgrendeld."
           fi
+          {
+            echo "BEKENDR_KEYSTORE_PATH=$RUNNER_TEMP/bekendr.jks"
+            echo "BEKENDR_KEYSTORE_PASSWORD=$PASS"
+            echo "BEKENDR_KEY_ALIAS=bekendr"
+            echo "BEKENDR_KEY_PASSWORD=$PASS"
+          } >> "$GITHUB_ENV"
       - name: Bouwen
         env:
-          SECRET_STORE_PASSWORD: ${{ secrets.BEKENDR_KEYSTORE_PASSWORD }}
-          SECRET_KEY_ALIAS: ${{ secrets.BEKENDR_KEY_ALIAS }}
-          SECRET_KEY_PASSWORD: ${{ secrets.BEKENDR_KEY_PASSWORD }}
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
-          if [ "${BEKENDR_TEMP_KEY:-}" = "1" ]; then
-            export BEKENDR_KEYSTORE_PASSWORD=tijdelijk BEKENDR_KEY_ALIAS=bekendr BEKENDR_KEY_PASSWORD=tijdelijk
-          else
-            export BEKENDR_KEYSTORE_PASSWORD="$SECRET_STORE_PASSWORD" BEKENDR_KEY_ALIAS="$SECRET_KEY_ALIAS" BEKENDR_KEY_PASSWORD="$SECRET_KEY_PASSWORD"
-          fi
           chmod +x gradlew
           set -o pipefail
           ./gradlew --no-daemon assembleRelease 2>&1 | tee build.log
+          # Controle: de APK moet met de vaste sleutel zijn ondertekend.
+          APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs app/build/outputs/apk/release/app-release.apk | grep -E "Signer #1 certificate (DN|SHA-256)"
       - name: Fouten als annotaties
         if: failure()
         run: |
@@ -70,7 +80,7 @@ jobs:
       - name: APK hernoemen
         run: |
           V=$(grep -m1 'versionName' app/build.gradle.kts | sed -E 's/.*"(.*)".*/\1/')
-          B=$(grep -m1 'versionCode' app/build.gradle.kts | sed -E 's/[^0-9]//g')
+          B=${{ github.run_number }}
           cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Bekendr-$V-build$B.apk"
           echo "APK=$RUNNER_TEMP/Bekendr-$V-build$B.apk" >> "$GITHUB_ENV"
           echo "VER=$V" >> "$GITHUB_ENV"; echo "BUILD=$B" >> "$GITHUB_ENV"

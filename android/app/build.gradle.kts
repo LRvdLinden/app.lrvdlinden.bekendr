@@ -13,13 +13,14 @@ android {
         applicationId = "app.lrvdlinden.bekendr"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
+        // Elke build krijgt een hoger nummer, zodat een nieuwe APK over de oude heen installeert.
+        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 1
         versionName = "1.0.0"
         resourceConfigurations += listOf("nl")
     }
 
     signingConfigs {
-        // Ondertekenen met een eigen sleutel als die als secret bestaat; anders met de debugsleutel.
+        // Altijd de vaste Bekendr-sleutel; de workflow Android-APK zet die klaar.
         create("release") {
             val path = System.getenv("BEKENDR_KEYSTORE_PATH")
             if (!path.isNullOrBlank() && file(path).exists()) {
@@ -27,12 +28,6 @@ android {
                 storePassword = System.getenv("BEKENDR_KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("BEKENDR_KEY_ALIAS")
                 keyPassword = System.getenv("BEKENDR_KEY_PASSWORD")
-            } else {
-                val debug = getByName("debug")
-                storeFile = debug.storeFile
-                storePassword = debug.storePassword
-                keyAlias = debug.keyAlias
-                keyPassword = debug.keyPassword
             }
         }
     }

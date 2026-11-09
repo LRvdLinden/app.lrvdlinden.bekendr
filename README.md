@@ -34,7 +34,7 @@ Mappen: `Bekendr/` (app), `Shared/` (app + widget + deel-extensie), `BekendrWidg
 ## Android: bouwen
 - Elke push naar `android/` bouwt via **Android-APK** een ondertekende release-APK en zet die in Releases.
 - Lokaal: open `android/` in Android Studio, of `./gradlew assembleRelease`.
-- Vaste ondertekensleutel (nodig om updates over een eerdere versie heen te installeren): zet de secrets `BEKENDR_KEYSTORE_BASE64`, `BEKENDR_KEYSTORE_PASSWORD`, `BEKENDR_KEY_ALIAS` en `BEKENDR_KEY_PASSWORD`. Zonder die secrets wordt met een tijdelijke debugsleutel ondertekend.
+- Elke APK wordt met dezelfde vaste sleutel ondertekend, zodat updates over de vorige versie heen installeren. De sleutel staat versleuteld in `android/signing/bekendr.jks.enc` en wordt in de workflow ontgrendeld met de repo-secret `APN_P8_CERT`. **Verwijder of wijzig die secret niet**, anders kan de sleutel niet meer worden geopend. Het buildnummer (`versionCode`) is het runnummer van de workflow.
 
 ## CI
 - **Apple-build**: bouwt de app voor iOS en macOS zonder ondertekening (controle of alles compileert).
