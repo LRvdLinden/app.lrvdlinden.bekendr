@@ -10,6 +10,7 @@ struct HomeView: View {
     @State private var selectedKey: String?
     @State private var editing: Place?
     @State private var adding = false
+    @State private var weather = WeatherStore.shared
 
     private var selected: Place? {
         places.first { $0.key == selectedKey } ?? places.first
@@ -22,6 +23,7 @@ struct HomeView: View {
                     placeChips
                     if let place = selected {
                         summary(for: place)
+                        today(for: place)
                         categories(for: place)
                         if let error = store.lastError {
                             Label(error, systemImage: "wifi.exclamationmark")
@@ -154,6 +156,66 @@ struct HomeView: View {
             .background(Theme.accentFill, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
         .buttonStyle(.plain)
+    }
+
+    /// Vandaag: het weer en wat er vandaag is bekendgemaakt bij deze locatie.
+    private func today(for place: Place) -> some View {
+        let index = MarkIndex(marks)
+        let list = visible(for: place).filter { Calendar.current.isDateInToday($0.date) }
+        let names = Dictionary(places.map { ($0.key, $0.name) }, uniquingKeysWith: { a, _ in a })
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Vandaag").font(.title3.weight(.heavy))
+                Text(Format.today()).font(.subheadline).foregroundStyle(.secondary)
+                Spacer()
+                if let w = weather.weather(for: place.key) {
+                    Label {
+                        Text("\(w.temperatureText) · \(w.description)")
+                    } icon: {
+                        Image(systemName: w.symbol).symbolRenderingMode(.multicolor)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .accessibilityLabel("Weer bij \(place.name): \(w.temperatureText), \(w.description)")
+                }
+            }
+            VStack(spacing: 0) {
+                if list.isEmpty {
+                    Label("Vandaag nog niets bekendgemaakt bij \(place.name).", systemImage: "checkmark.circle")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(14)
+                } else {
+                    ForEach(list.prefix(4)) { notice in
+                        NavigationLink(value: notice) {
+                            NoticeRow(notice: notice, unread: index.isUnread(notice), placeNames: names)
+                                .padding(.horizontal, 14).padding(.vertical, 6)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        if notice.id != list.prefix(4).last?.id { Divider().padding(.leading, 35) }
+                    }
+                    if list.count > 4 {
+                        Divider()
+                        NavigationLink(value: NoticeFilter(placeKey: place.key, category: nil, scope: .all)) {
+                            Text("Bekijk alle \(list.count) van vandaag")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .background(Theme.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            if weather.weather(for: place.key) != nil {
+                Text("Weer: Open-Meteo").font(.caption2).foregroundStyle(.tertiary)
+            }
+        }
+        .onAppear { NoticeNavigator.shared.sequence = list }
+        .task(id: place.key) {
+            await weather.load(key: place.key, latitude: place.latitude, longitude: place.longitude)
+        }
     }
 
     private func categories(for place: Place) -> some View {

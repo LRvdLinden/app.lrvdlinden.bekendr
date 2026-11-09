@@ -89,6 +89,11 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        Label("Over Bekendr", systemImage: "info.circle")
+                    }
                     Link(destination: AppConfig.privacyURL) {
                         Label("Privacyverklaring", systemImage: "hand.raised")
                     }
@@ -105,7 +110,7 @@ struct SettingsView: View {
                         Label("Bron: officielebekendmakingen.nl", systemImage: "building.columns")
                     }
                 } footer: {
-                    Text("Bekendr is geen app van de overheid. De gegevens komen van KOOP en PDOK en worden rechtstreeks op je toestel opgehaald.")
+                    Text("Bekendr is geen app van de overheid. De gegevens komen van KOOP en PDOK, het weer van Open-Meteo, en worden rechtstreeks op je toestel opgehaald.")
                 }
 
                 Section {
@@ -165,6 +170,12 @@ struct WhatsNewView: View {
                     Label("Bewaren, prullenbak en gelezen via iCloud op al je apparaten", systemImage: "icloud")
                     Label("Melding bij iets nieuws, met stille uren", systemImage: "bell.badge")
                     Label("Widget voor je beginscherm", systemImage: "square.grid.2x2")
+                    Label("Vandaag: wat er vandaag is bekendgemaakt, met het weer", systemImage: "sun.max")
+                    Label("Vorige en volgende melding zonder terug naar de lijst", systemImage: "arrow.left.arrow.right")
+                    Label("Feedback met een reden als er iets niet klopt", systemImage: "exclamationmark.bubble")
+                    Label("Straatbeeld bij een melding (Look Around)", systemImage: "binoculars")
+                    Label("Alles in één keer weggooien, terugzetten of de prullenbak legen", systemImage: "trash")
+                    Label("Over Bekendr met bronnen en disclaimer", systemImage: "info.circle")
                 }
             }
             .navigationTitle("Wat is nieuw")

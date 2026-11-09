@@ -6,16 +6,6 @@ enum AppConfig {
     static let supportURL = URL(string: "https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues")!
     static let sourceURL = URL(string: "https://www.officielebekendmakingen.nl")!
     static let refreshTaskID = "app.lrvdlinden.bekendr.refresh"
-
-    /// Een melding over een verkeerde locatie, als nieuw GitHub-issue met de gegevens ingevuld.
-    static func feedbackURL(for notice: Notice) -> URL {
-        var c = URLComponents(string: "https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues/new")!
-        c.queryItems = [
-            .init(name: "title", value: "Locatie klopt niet: \(notice.title.prefix(80))"),
-            .init(name: "body", value: "Bekendmaking: \(notice.id)\nLink: \(notice.url.absoluteString)\n\nWat klopt er niet?\n"),
-        ]
-        return c.url ?? supportURL
-    }
 }
 
 enum AppearanceSetting: String, CaseIterable, Identifiable {

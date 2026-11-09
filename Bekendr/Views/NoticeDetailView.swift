@@ -4,7 +4,14 @@ import MapKit
 
 /// Eén bekendmaking met de gegevens, een kaartje en de link naar de officiële publicatie.
 struct NoticeDetailView: View {
-    let notice: Notice
+    private let start: Notice
+    @State private var current: Notice?
+    @State private var showFeedback = false
+    @State private var lookAround: MKLookAroundScene?
+    @State private var navigator = NoticeNavigator.shared
+    private var notice: Notice { current ?? start }
+
+    init(notice: Notice) { start = notice }
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -45,6 +52,18 @@ struct NoticeDetailView: View {
                     miniMap(CLLocationCoordinate2D(latitude: lat, longitude: lon))
                 }
 
+                if let lookAround {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Straatbeeld")
+                            .font(.footnote.weight(.bold))
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                        LookAroundPreview(initialScene: lookAround)
+                            .frame(height: 190)
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    }
+                }
+
                 if !notice.summary.isEmpty || !notice.subject.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Samenvatting")
@@ -72,9 +91,14 @@ struct NoticeDetailView: View {
                         .background(Theme.accentFill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
 
-                Link("Locatie klopt niet? Laat het weten", destination: AppConfig.feedbackURL(for: notice))
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
+                Button { showFeedback = true } label: {
+                    Label("Klopt er iets niet? Laat het weten", systemImage: "exclamationmark.bubble")
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderless)
+
+                pager
             }
             .padding(20)
             .frame(maxWidth: 720)
@@ -113,7 +137,38 @@ struct NoticeDetailView: View {
             }
         }
         .sensoryFeedback(.success, trigger: savedTick)
-        .onAppear { MarkActions.setRead(notice, in: context) }
+        .sensoryFeedback(.selection, trigger: notice.id)
+        .sheet(isPresented: $showFeedback) { FeedbackView(notice: notice) }
+        .task(id: notice.id) {
+            MarkActions.setRead(notice, in: context)
+            lookAround = nil
+            if let lat = notice.latitude, let lon = notice.longitude {
+                let request = MKLookAroundSceneRequest(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
+                lookAround = try? await request.scene
+            }
+        }
+    }
+
+    /// Vorige en volgende melding uit de lijst waar je vandaan kwam.
+    @ViewBuilder private var pager: some View {
+        let n = navigator.neighbours(of: notice)
+        if n.previous != nil || n.next != nil {
+            HStack(spacing: 12) {
+                Button { withAnimation { current = n.previous } } label: {
+                    Label("Vorige", systemImage: "chevron.left").frame(maxWidth: .infinity, minHeight: 44)
+                }
+                .disabled(n.previous == nil)
+                if let pos = navigator.position(of: notice) {
+                    Text("\(pos.0) van \(pos.1)").font(.footnote.monospacedDigit()).foregroundStyle(.secondary)
+                }
+                Button { withAnimation { current = n.next } } label: {
+                    Label("Volgende", systemImage: "chevron.right").labelStyle(TrailingIconLabelStyle()).frame(maxWidth: .infinity, minHeight: 44)
+                }
+                .disabled(n.next == nil)
+            }
+            .buttonStyle(.bordered)
+            .padding(.top, 4)
+        }
     }
 
     private var distances: [(String, String)] {
@@ -171,5 +226,12 @@ struct NoticeDetailView: View {
             .buttonStyle(.plain)
             .padding(10)
         }
+    }
+}
+
+/// Label met het icoon rechts (voor "Volgende").
+struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) { configuration.title; configuration.icon }
     }
 }

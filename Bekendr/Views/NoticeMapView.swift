@@ -46,6 +46,8 @@ struct NoticeMapView: View {
                 }
             }
             .mapStyle(.standard(pointsOfInterest: .excludingAll))
+            .onAppear { NoticeNavigator.shared.sequence = located }
+            .onChange(of: located.map(\.id)) { _, _ in NoticeNavigator.shared.sequence = located }
             .mapControls {
                 MapUserLocationButton()
                 MapCompass()

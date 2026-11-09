@@ -119,6 +119,8 @@ struct NoticeListContent: View {
             }
         }
         .groupedList()
+        .onAppear { NoticeNavigator.shared.sequence = notices }
+        .onChange(of: notices.map(\.id)) { _, _ in NoticeNavigator.shared.sequence = notices }
     }
 }
 
@@ -158,6 +160,7 @@ struct InboxView: View {
     @State private var placeKey: String?
     @State private var scope: InboxScope = .all
     @State private var path = NavigationPath()
+    @State private var confirmBulk = false
 
     var body: some View {
         let index = MarkIndex(marks)
@@ -183,6 +186,7 @@ struct InboxView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
+                        bulkButton(notices)
                         Button("Markeer alles als gelezen", systemImage: "envelope.open") {
                             MarkActions.markAllRead(store.notices, in: context)
                             WidgetSync.update(places: places.map(PlaceInfo.init))
@@ -204,6 +208,9 @@ struct InboxView: View {
                 WidgetSync.update(places: places.map(PlaceInfo.init))
             }
             .navigationDestination(for: Notice.self) { NoticeDetailView(notice: $0) }
+            .confirmationDialog(bulkQuestion(notices.count), isPresented: $confirmBulk, titleVisibility: .visible) {
+                Button(bulkTitle, role: .destructive) { runBulk(notices) }
+            }
         }
         .onChange(of: router.openNoticeID, initial: true) { _, id in
             guard let id else { return }
@@ -215,6 +222,42 @@ struct InboxView: View {
             }
         }
         .onChange(of: marks.count) { _, _ in WidgetSync.update(places: places.map(PlaceInfo.init)) }
+    }
+
+    private var bulkTitle: String {
+        switch scope {
+        case .saved: "Alles niet meer bewaren"
+        case .trash: "Prullenbak legen"
+        default: "Verwijder alle meldingen"
+        }
+    }
+
+    private func bulkQuestion(_ count: Int) -> String {
+        switch scope {
+        case .saved: "\(count) bewaarde meldingen terugzetten naar de inbox?"
+        case .trash: "\(count) meldingen definitief verwijderen?"
+        default: "\(count) meldingen naar de prullenbak? Ze staan daar nog 30 dagen."
+        }
+    }
+
+    @ViewBuilder private func bulkButton(_ notices: [Notice]) -> some View {
+        if !notices.isEmpty {
+            Button(bulkTitle, systemImage: scope == .saved ? "bookmark.slash" : (scope == .trash ? "trash.slash" : "trash"), role: .destructive) {
+                confirmBulk = true
+            }
+        }
+    }
+
+    private func runBulk(_ notices: [Notice]) {
+        let index = MarkIndex(marks)
+        for n in notices {
+            switch scope {
+            case .saved: if index.isSaved(n) { MarkActions.toggleSaved(n, in: context) }
+            case .trash: MarkActions.deleteForever(n, in: context)
+            default: MarkActions.trash(n, in: context)
+            }
+        }
+        WidgetSync.update(places: places.map(PlaceInfo.init))
     }
 
     private var placeFilterList: [Place] {
