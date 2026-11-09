@@ -57,6 +57,8 @@ sealed interface Screen {
     data class Editor(val place: Place?, val query: String = "") : Screen
     data class Listing(val placeId: String?, val category: Category?, val scope: Scope) : Screen
     data object WhatsNew : Screen
+    data class Feedback(val id: String) : Screen
+    data object About : Screen
 }
 
 @Composable
@@ -89,7 +91,9 @@ fun BekendrApp(activity: MainActivity) {
         when {
             !settings.onboardingDone -> Onboarding(repo, activity)
             stack.isNotEmpty() -> when (val top = stack.last()) {
-                is Screen.Detail -> DetailScreen(repo, top.id, pop)
+                is Screen.Detail -> DetailScreen(repo, top.id, push, pop)
+                is Screen.Feedback -> FeedbackScreen(repo, top.id, pop)
+                Screen.About -> AboutScreen(pop)
                 is Screen.Editor -> EditorScreen(repo, top.place, top.query, pop)
                 is Screen.Listing -> ListScreen(repo, top, push, pop)
                 Screen.WhatsNew -> WhatsNewScreen(pop)

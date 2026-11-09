@@ -38,6 +38,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.runtime.key
+import androidx.compose.runtime.SideEffect
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.ChevronLeft
+import androidx.compose.material.icons.outlined.Streetview
+import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Bookmark
@@ -516,6 +524,7 @@ fun HomeScreen(repo: Repository, push: (Screen) -> Unit) {
                         Text("$today vandaag   ·   $week afgelopen 7 dagen", color = Color.White.copy(alpha = 0.85f), fontSize = 14.sp)
                     }
                 }
+                TodayCard(repo, place, list, push)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Categorieën", Modifier.weight(1f), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
                     TextButton({ push(Screen.Editor(place)) }) { Text("Beheren") }
@@ -573,6 +582,7 @@ private fun NoticeList(repo: Repository, list: List<Notice>, scope: Scope, push:
         }
         return
     }
+    SideEffect { NoticeNavigator.sequence = list.map { it.id } }
     LazyColumn(Modifier.fillMaxSize()) {
         grouped(list).forEach { (day, items) ->
             item(key = "h-$day") { SectionTitle(day) }
@@ -600,9 +610,27 @@ fun InboxScreen(repo: Repository, push: (Screen) -> Unit) {
     var scope by rememberSaveable { mutableStateOf(Scope.all) }
     var selected by remember { mutableStateOf<Notice?>(null) }
     val list = remember(notices, marks, placeId, scope) { filterNotices(repo, notices, placeId, null, scope) }
+    var confirmBulk by remember { mutableStateOf(false) }
+    val bulkTitle = when (scope) { Scope.saved -> "Alles niet meer bewaren"; Scope.trash -> "Prullenbak legen"; else -> "Verwijder alle meldingen" }
+
+    if (confirmBulk) AlertDialog(
+        onDismissRequest = { confirmBulk = false },
+        title = { Text(bulkTitle) },
+        text = { Text(when (scope) {
+            Scope.saved -> "${list.size} bewaarde meldingen terugzetten naar de inbox?"
+            Scope.trash -> "${list.size} meldingen definitief verwijderen?"
+            else -> "${list.size} meldingen naar de prullenbak? Ze staan daar nog 30 dagen."
+        }) },
+        confirmButton = { TextButton({
+            when (scope) { Scope.saved -> repo.unsaveAll(list); Scope.trash -> repo.deleteForeverAll(list); else -> repo.trashAll(list) }
+            confirmBulk = false
+        }) { Text(bulkTitle, color = MaterialTheme.colorScheme.error) } },
+        dismissButton = { TextButton({ confirmBulk = false }) { Text("Annuleer") } },
+    )
 
     Column(Modifier.fillMaxSize()) {
         Header("Meldingen") {
+            if (list.isNotEmpty()) IconButton(onClick = { confirmBulk = true }) { Icon(Icons.Outlined.DeleteSweep, bulkTitle) }
             IconButton(onClick = { repo.markAllRead() }) { Icon(Icons.Outlined.DoneAll, "Markeer alles als gelezen") }
         }
         Column(Modifier.padding(horizontal = 16.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -619,7 +647,7 @@ fun InboxScreen(repo: Repository, push: (Screen) -> Unit) {
             Box(Modifier.fillMaxSize()) {
                 if (first != null) OsmMap(Modifier.fillMaxSize(), GeoPoint(first.lat, first.lon),
                     radius = if (first.mode == PlaceMode.radius) first.radius else null, homes = shown,
-                    notices = list, interactive = true, onSelect = { selected = it })
+                    notices = list, interactive = true, onSelect = { selected = it; NoticeNavigator.sequence = list.filter { n -> n.lat != null }.map { n -> n.id } })
                 selected?.let { n ->
                     Surface(onClick = { push(Screen.Detail(n.id)) }, Modifier.align(Alignment.BottomCenter).padding(12.dp),
                         shape = RoundedCornerShape(22.dp), color = MaterialTheme.colorScheme.surfaceContainer, shadowElevation = 8.dp) {
@@ -656,10 +684,11 @@ fun ListScreen(repo: Repository, s: Screen.Listing, push: (Screen) -> Unit, pop:
 // MARK: - Bekendmaking
 
 @Composable
-fun DetailScreen(repo: Repository, id: String, pop: () -> Unit) {
+fun DetailScreen(repo: Repository, startId: String, push: (Screen) -> Unit, pop: () -> Unit) {
     val context = LocalContext.current
     val marks by repo.marks.collectAsStateWithLifecycle()
     val places by repo.places.collectAsStateWithLifecycle()
+    var id by remember(startId) { mutableStateOf(startId) }
     val n = remember(id) { repo.find(id) }
     if (n == null) { Column { Header("Bekendmaking", pop); EmptyState("Niet meer beschikbaar", "Deze bekendmaking staat niet meer in de lijst.") }; return }
     LaunchedEffect(id) { repo.setRead(n) }
@@ -697,7 +726,13 @@ fun DetailScreen(repo: Repository, id: String, pop: () -> Unit) {
             }
             if (n.lat != null && n.lon != null) {
                 val home = places.firstOrNull { it.id in n.places }
-                OsmMap(Modifier.fillMaxWidth().height(170.dp), GeoPoint(n.lat, n.lon), homes = listOfNotNull(home), notices = listOf(n))
+                key(n.id) { OsmMap(Modifier.fillMaxWidth().height(170.dp), GeoPoint(n.lat, n.lon), homes = listOfNotNull(home), notices = listOf(n)) }
+                streetViewIntent(context, n.lat, n.lon)?.let { sv ->
+                    OutlinedButton({ context.startActivity(sv) }, Modifier.fillMaxWidth()) {
+                        Icon(Icons.Outlined.Streetview, null, Modifier.size(18.dp))
+                        Text("  Bekijk in Street View")
+                    }
+                }
             }
             val text = n.summary.ifEmpty { n.subject }
             if (text.isNotEmpty()) {
@@ -713,11 +748,23 @@ fun DetailScreen(repo: Repository, id: String, pop: () -> Unit) {
                 Text("Bekijk officiële publicatie  ", fontWeight = FontWeight.Bold)
                 Icon(Icons.Outlined.OpenInNew, null, Modifier.size(18.dp))
             }
-            TextButton(onClick = {
-                val t = java.net.URLEncoder.encode("Locatie klopt niet: ${n.title.take(80)}", "UTF-8")
-                val b = java.net.URLEncoder.encode("Bekendmaking: ${n.id}\nLink: ${n.url}\n\nWat klopt er niet?\n", "UTF-8")
-                context.openUrl("https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues/new?title=$t&body=$b")
-            }, Modifier.fillMaxWidth()) { Text("Locatie klopt niet? Laat het weten", fontWeight = FontWeight.SemiBold) }
+            TextButton(onClick = { push(Screen.Feedback(n.id)) }, Modifier.fillMaxWidth()) {
+                Text("Klopt er iets niet? Laat het weten", fontWeight = FontWeight.SemiBold)
+            }
+            val (prev, next) = NoticeNavigator.neighbours(n.id)
+            if (prev != null || next != null) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedButton({ prev?.let { id = it } }, Modifier.weight(1f), enabled = prev != null) {
+                        Icon(Icons.Outlined.ChevronLeft, null); Text("Vorige")
+                    }
+                    NoticeNavigator.position(n.id)?.let { (a, b) ->
+                        Text("$a van $b", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    OutlinedButton({ next?.let { id = it } }, Modifier.weight(1f), enabled = next != null) {
+                        Text("Volgende"); Icon(Icons.Outlined.ChevronRight, null)
+                    }
+                }
+            }
         }
     }
 }
@@ -833,6 +880,8 @@ fun SettingsScreen(repo: Repository, activity: MainActivity, push: (Screen) -> U
 
             Spacer(Modifier.height(12.dp))
             Card {
+                LinkRow("Over Bekendr") { push(Screen.About) }
+                HorizontalDivider()
                 LinkRow("Privacyverklaring") { context.openUrl("https://github.com/LRvdLinden/app.lrvdlinden.bekendr/blob/main/PRIVACY.md") }
                 HorizontalDivider()
                 LinkRow("Support en contact") { context.openUrl("https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues") }
@@ -843,7 +892,7 @@ fun SettingsScreen(repo: Repository, activity: MainActivity, push: (Screen) -> U
                 HorizontalDivider()
                 LinkRow("Bron: officielebekendmakingen.nl") { context.openUrl("https://www.officielebekendmakingen.nl") }
             }
-            Text("Bekendr is geen app van de overheid. De gegevens komen van KOOP en PDOK en worden rechtstreeks op je toestel opgehaald. Op Android blijft alles op dit toestel.",
+            Text("Bekendr is geen app van de overheid. De gegevens komen van KOOP en PDOK, het weer van Open-Meteo, en worden rechtstreeks op je toestel opgehaald. Op Android blijft alles op dit toestel.",
                 Modifier.padding(16.dp), fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             SectionTitle("Ontdekken")
@@ -878,6 +927,12 @@ fun WhatsNewScreen(pop: () -> Unit) {
                 "Meldingen als lijst of op de kaart",
                 "Bewaren, prullenbak en gelezen",
                 "Melding bij iets nieuws, met stille uren",
+                "Vandaag: wat er vandaag is bekendgemaakt, met het weer",
+                "Vorige en volgende melding zonder terug naar de lijst",
+                "Feedback met een reden als er iets niet klopt",
+                "Straatbeeld bij een melding (Google Street View)",
+                "Alles in één keer weggooien, terugzetten of de prullenbak legen",
+                "Over Bekendr met bronnen en disclaimer",
             ).forEach { Text("•  $it") }
         }
     }

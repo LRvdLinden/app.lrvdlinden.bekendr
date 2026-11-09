@@ -88,6 +88,16 @@ class Repository private constructor(private val dir: File) {
     fun restore(n: Notice) = mark(n.id) { it.copy(trashedAt = null) }
     fun deleteForever(n: Notice) = mark(n.id) { it.copy(deleted = true, saved = false, snapshot = null, trashedAt = 0) }
 
+    fun trashAll(list: List<Notice>) = bulk(list) { it.copy(trashedAt = System.currentTimeMillis(), read = true) }
+    fun unsaveAll(list: List<Notice>) = bulk(list) { it.copy(saved = false, snapshot = null) }
+    fun deleteForeverAll(list: List<Notice>) = bulk(list) { it.copy(deleted = true, saved = false, snapshot = null, trashedAt = 0) }
+    private fun bulk(list: List<Notice>, change: (Mark) -> Mark) {
+        val m = _marks.value.toMutableMap()
+        list.forEach { n -> m[n.id] = change(m[n.id] ?: Mark()) }
+        _marks.value = m
+        write("marks.json", m)
+    }
+
     fun isTrashed(n: Notice) = _marks.value[n.id]?.trashedAt != null
     fun isInTrash(n: Notice): Boolean {
         val m = _marks.value[n.id] ?: return false
