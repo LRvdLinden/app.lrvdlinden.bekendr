@@ -21,6 +21,7 @@ struct NoticeFilter: Hashable {
 }
 
 /// Filtert en groepeert meldingen; gedeeld door de inbox en de lijst vanaf de tegels.
+@MainActor
 struct NoticeQuery {
     let store: NoticeStore
     let marks: MarkIndex
