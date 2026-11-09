@@ -4,13 +4,18 @@ Last updated: 9 November 2026
 Bekendr shows official public notices around the locations you set yourself.
 
 What Bekendr does and does not do
-- Bekendr has no account, no server of its own, no ads and no analytics or tracking.
+- Bekendr has no account, no ads and no analytics or tracking.
 - The addresses and areas you set are only used to fetch notices. To do so, the app sends the coordinates (or the name of the area) directly to:
   - KOOP (repository.overheid.nl), the source of officielebekendmakingen.nl;
   - PDOK (api.pdok.nl), to look up addresses and areas.
   These government services have their own privacy policies.
+- For the weather (Today overview), the coordinates of your location, rounded to about 100 metres, are sent to Open-Meteo (api.open-meteo.com).
+- A route (iPhone, iPad and Mac) is calculated by Apple Maps using the points you choose.
 - Your current location is only requested when you tap "Use current location" yourself, and only used to fill in the nearest address.
 - The map uses Apple Maps (iPhone, iPad, Mac) or OpenStreetMap (Android).
+
+Feedback
+If you report in the app that something is wrong with a notice, the following goes to the Bekendr admin: the notice (number, title, link), the chosen reason, your explanation, the type of device, the app version and a random number of the app on your device. That number is only stored as a hash, to limit abuse. No name, email address or location is sent. Feedback is kept until it has been handled and is then deleted.
 
 Storage
 - iPhone, iPad and Mac: your locations and what you do with notices (read, saved, trash) are stored in your own iCloud, so they are the same on all your devices. The developer has no access to it.

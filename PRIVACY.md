@@ -5,13 +5,18 @@
 Bekendr toont officiële bekendmakingen rond de locaties die je zelf instelt.
 
 ## Wat Bekendr wel en niet doet
-- Bekendr heeft **geen account**, **geen eigen server**, **geen advertenties** en **geen analytics of tracking**.
+- Bekendr heeft **geen account**, **geen advertenties** en **geen analytics of tracking**.
 - De adressen en gebieden die je instelt, worden alleen gebruikt om bekendmakingen op te halen. Daarvoor stuurt de app de coördinaten (of de naam van het gebied) rechtstreeks naar:
   - KOOP (repository.overheid.nl), de bron van officielebekendmakingen.nl;
   - PDOK (api.pdok.nl), om adressen en gebieden op te zoeken.
   Deze overheidsdiensten hebben hun eigen privacybeleid.
+- Voor het **weer** (overzicht Vandaag) gaan de coördinaten van je locatie, afgerond op ongeveer 100 meter, naar Open-Meteo (api.open-meteo.com).
+- Een **route** (iPhone, iPad en Mac) wordt berekend door Apple Kaarten, met de punten die je kiest.
 - Je **huidige locatie** wordt alleen gevraagd als je zelf op *Gebruik huidige locatie* tikt, en alleen gebruikt om het dichtstbijzijnde adres in te vullen.
 - De kaart gebruikt Apple Kaarten (iPhone, iPad, Mac) of OpenStreetMap (Android).
+
+## Feedback
+Laat je in de app weten dat er iets niet klopt aan een bekendmaking, dan gaat naar het beheer van Bekendr: de bekendmaking (nummer, titel, link), de gekozen reden, je toelichting, het soort apparaat, de appversie en een willekeurig nummer van de app op je toestel. Dat nummer wordt alleen als hash bewaard, om misbruik te beperken. Er gaat geen naam, e-mailadres of locatie mee. De feedback wordt bewaard tot hij is afgehandeld en daarna verwijderd.
 
 ## Opslag
 - **iPhone, iPad en Mac**: je locaties en wat je met meldingen doet (gelezen, bewaard, prullenbak) worden in je eigen iCloud bewaard, zodat ze op al je apparaten gelijk zijn. De ontwikkelaar kan daar niet bij.

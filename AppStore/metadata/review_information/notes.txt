@@ -5,9 +5,9 @@ HOW TO TEST
 1. First launch: a short splash, then a 3-step welcome. Step 1: tap "Volgende".
 2. Step 2 (location): keep "Straal rond adres" and type a Dutch address, e.g. "Dam 1, Amsterdam", then tap the suggestion. Choose a radius (1 km gives the most results in a city). Alternatively choose "Wijk of gemeente" and type "Amsterdam" (municipality) or a neighbourhood; several areas can be added and are combined into one location.
 3. Step 3: optionally enable notifications, then tap "Aan de slag". The app fetches the notices (this can take a few seconds).
-4. Tab "Jouw buurt": summary of new notices and tiles per category; tap a tile or "Bekijk" to open the list.
-5. Tab "Meldingen": switch between "Lijst" and "Kaart". Swipe a row to save, trash or mark as read. Tap a notice for details and "Bekijk officiële publicatie" (opens officielebekendmakingen.nl).
-6. Tab "Instellingen": add or edit locations (name, radius, areas, categories), notifications with quiet hours, Face ID lock, appearance, saved notices, trash, "Meer apps van de ontwikkelaar".
+4. Tab "Jouw buurt": summary of new notices, a "Vandaag" card with today's notices and the current weather (Open-Meteo), and tiles per category.
+5. Tab "Meldingen": switch between "Lijst" and "Kaart". Swipe a row to save, trash or mark as read. Tap a notice for details, Look Around (where available), "Bekijk officiële publicatie" (opens officielebekendmakingen.nl), previous/next buttons, and "Klopt er iets niet? Laat het weten" (feedback with a reason and optional explanation, sent anonymously to the developer's admin; no account).
+6. Tab "Instellingen": add or edit locations (name, radius, areas, categories; on iPhone, iPad and Mac also a route: start, optional stops and destination, by car or bike/walking, calculated with Apple Maps), notifications with quiet hours, Face ID lock, appearance, saved notices, trash, "Meer apps van de ontwikkelaar".
 7. Widget: add the Bekendr widget on the Home Screen. Share extension: share a text containing an address from another app to Bekendr to add it as a location.
 8. Mac: the same app (iPhone/iPad/Mac with iCloud sync).
 
@@ -17,6 +17,7 @@ All content is Netherlands-only. Addresses outside the Netherlands cannot be fou
 DATA SOURCES
 - KOOP SRU (repository.overheid.nl/sru), the public open-data source behind officielebekendmakingen.nl.
 - PDOK Locatieserver (api.pdok.nl) for address and area lookup.
+- Open-Meteo (api.open-meteo.com) for the current weather, CC BY 4.0, credited in the app.
 Both are public open-data services of the Dutch government, used as intended. Bekendr is not affiliated with or endorsed by any government body; the app says so in the settings and links every notice to the official publication.
 
 PERMISSIONS

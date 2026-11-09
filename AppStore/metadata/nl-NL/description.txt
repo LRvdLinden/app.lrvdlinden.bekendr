@@ -10,7 +10,11 @@ WAT JE KUNT
 • Per locatie kiezen welke categorieën je wilt zien
 • Alle meldingen als lijst of op de kaart, met een eigen kleur per categorie
 • Per melding de afstand, de instantie, een samenvatting en de link naar de officiële publicatie
-• Bewaren, als gelezen markeren of naar de prullenbak vegen
+• Vandaag: wat er vandaag is bekendgemaakt, met het weer erbij
+• Routes volgen: bekendmakingen langs je vaste route, zoals naar werk
+• Vorige en volgende melding, en straatbeeld bij een melding
+• Feedback geven als een bekendmaking op de verkeerde plek staat of in de verkeerde categorie
+• Bewaren, als gelezen markeren of naar de prullenbak vegen, ook alles in één keer
 • Een melding bij iets nieuws, met stille uren voor de nacht
 • Widget voor je beginscherm
 • Een adres delen vanuit een andere app om het als locatie toe te voegen
@@ -18,7 +22,7 @@ WAT JE KUNT
 • Je locaties en keuzes via iCloud gelijk op iPhone, iPad en Mac
 
 PRIVACY
-Geen account, geen advertenties, geen tracking. Bekendr heeft geen eigen server: de app haalt de gegevens zelf op bij de openbare bronnen van de overheid (KOOP en PDOK). Je locaties staan alleen op je apparaten en in je eigen iCloud.
+Geen account, geen advertenties, geen tracking. De app haalt de gegevens zelf op bij de openbare bronnen van de overheid (KOOP en PDOK); het weer komt van Open-Meteo. Je locaties staan alleen op je apparaten en in je eigen iCloud.
 
 GOED OM TE WETEN
 Bekendr is geen app van de overheid. Een zienswijze of bezwaar dien je in bij de instantie zelf; hoe dat gaat, staat in de officiële publicatie.

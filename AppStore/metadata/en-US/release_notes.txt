@@ -5,3 +5,4 @@ First version of Bekendr:
 • Saved, trash and read status synced via iCloud
 • Notification when something new appears, with quiet hours
 • Home Screen widget
+• Today with weather, route following, previous and next notice, Look Around and feedback with a reason

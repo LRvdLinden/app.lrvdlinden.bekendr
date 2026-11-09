@@ -23,13 +23,19 @@ Versie 1.0.0 (build 1) · bundle-id `app.lrvdlinden.bekendr` · platforms iPhone
 Alle vragen **None / No**: geen geweld, seks, grof taalgebruik, drugs, gokken, horror, medische informatie; geen onbeperkte webtoegang (alleen links naar officielebekendmakingen.nl die in Safari openen); geen door gebruikers gemaakte inhoud; geen chat. Uitkomst: **4+**.
 
 ## App Privacy (privacylabel)
-**Data Not Collected.**
-- Geen account, geen analytics, geen crash-SDK, geen advertenties, geen tracking (geen ATT).
+Geen tracking (geen ATT), niets gekoppeld aan de identiteit van de gebruiker. Aan te vinken als **Data Collected – Not Linked to You**, doel **App Functionality**:
+| Gegevenstype | Waarom |
+| --- | --- |
+| User Content → Other User Content | feedback op een bekendmaking (gekozen reden en toelichting), alleen als de gebruiker die zelf verstuurt |
+| Identifiers → Device ID | willekeurig nummer van de app-installatie bij feedback, alleen als hash bewaard, tegen misbruik |
+| Location → Coarse Location | coördinaten van een gekozen locatie, afgerond op ~100 m, naar Open-Meteo voor het weer op Vandaag |
+
+- Geen account, geen analytics, geen crash-SDK, geen advertenties.
 - Locaties en gelezen/bewaard staan alleen op het toestel en in de eigen iCloud van de gebruiker (CloudKit, privédatabase): de ontwikkelaar kan er niet bij.
 - Voor het ophalen stuurt de app coördinaten of een gebiedsnaam rechtstreeks naar de openbare API's van KOOP en PDOK; die worden niet door de ontwikkelaar ontvangen of bewaard.
 - Huidige locatie alleen op verzoek ("Gebruik huidige locatie"), alleen om een adres in te vullen; niet bewaard als locatiegeschiedenis.
 - Meldingen zijn lokaal; er gaat geen pushtoken naar een server.
-- `PrivacyInfo.xcprivacy` (app, widget en deel-extensie): geen verzamelde gegevens, geen tracking; alleen de reden voor UserDefaults.
+- `PrivacyInfo.xcprivacy` van de app: dezelfde drie gegevenstypen (niet gekoppeld, geen tracking, App Functionality); widget en deel-extensie verzamelen niets.
 - SDK's van derden: geen.
 
 ## Toegankelijkheid (Accessibility Nutrition Labels)

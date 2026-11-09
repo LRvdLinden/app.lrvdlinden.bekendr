@@ -6,7 +6,8 @@
 - Na elke push de builds controleren: **Apple-build** (iOS + macOS) en **Android-APK** (APK in Releases).
 - Apple niet in de simulator testen; Léon test zelf.
 - Taal van UI en documentatie: alleen Nederlands.
-- Geen eigen server. Data: KOOP SRU (`repository.overheid.nl/sru`) en PDOK Locatieserver.
+- Geen eigen server voor de app. Data: KOOP SRU (`repository.overheid.nl/sru`), PDOK Locatieserver en Open-Meteo (weer). Feedback uit de app en het beheer lopen via de centrale functie `lrbeheer` (LRvdLinden/app.lrvdlinden, `beheer/server`).
+- Routes volgen alleen op Apple (MapKit); niet in de Android-app.
 - Android-APK altijd met dezelfde sleutel: `android/signing/bekendr.jks.enc`, ontgrendeld met repo-secret `APN_P8_CERT` (nooit verwijderen of wijzigen). Nooit een nieuwe sleutel maken.
 - Android is alleen lokaal (geen sync). Apple synchroniseert via iCloud (SwiftData + CloudKit, container `iCloud.app.lrvdlinden.bekendr`).
 - Standaarden uit de skill `lrvdlinden-app-defaults`: MoreAppsCard, AppInfoFooter, review-prompt, privacy manifest, Weergave-keuze.

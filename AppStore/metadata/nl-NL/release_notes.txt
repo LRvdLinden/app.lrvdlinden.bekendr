@@ -5,3 +5,4 @@ Eerste versie van Bekendr:
 • Bewaren, prullenbak en gelezen via iCloud op al je apparaten
 • Melding bij iets nieuws, met stille uren
 • Widget voor je beginscherm
+• Vandaag met het weer, routes volgen, vorige en volgende melding, straatbeeld en feedback met een reden

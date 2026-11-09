@@ -10,7 +10,11 @@ WHAT YOU CAN DO
 • Choose per location which categories you want to see
 • All notices as a list or on the map, with a colour per category
 • For each notice the distance, the authority, a summary and a link to the official publication
-• Save, mark as read or swipe to the trash
+• Today: what was announced today, with the weather
+• Follow routes: notices along your regular route, such as to work
+• Previous and next notice, and Look Around for a notice
+• Send feedback when a notice is in the wrong place or category
+• Save, mark as read or swipe to the trash, also all at once
 • A notification when something new appears, with quiet hours at night
 • Home Screen widget
 • Share an address from another app to add it as a location
@@ -18,7 +22,7 @@ WHAT YOU CAN DO
 • Your locations and choices in sync via iCloud on iPhone, iPad and Mac
 
 PRIVACY
-No account, no ads, no tracking. Bekendr has no server of its own: the app fetches the data itself from the public government sources (KOOP and PDOK). Your locations stay on your devices and in your own iCloud.
+No account, no ads, no tracking. The app fetches the data itself from the public government sources (KOOP and PDOK); weather comes from Open-Meteo. Your locations stay on your devices and in your own iCloud.
 
 GOOD TO KNOW
 Bekendr covers the Netherlands only and the app is available in Dutch. Bekendr is not a government app.
