@@ -13,10 +13,14 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="theme-color" content="#F4F5F8">
   <meta property="og:type" content="website">
+  <link rel="canonical" href="https://bekendr.lrvdlinden.app/">
+  <link rel="alternate" hreflang="nl-NL" href="https://bekendr.lrvdlinden.app/">
+  <meta property="og:url" content="https://bekendr.lrvdlinden.app/">
+  <meta property="og:image:type" content="image/png">
   <meta property="og:site_name" content="Bekendr">
   <meta property="og:title" content="Bekendr: weet wat er in je buurt gebeurt">
   <meta property="og:description" content="Officiële bekendmakingen rond je adres, op één plek. Gratis, zonder account en zonder reclame.">
-  <meta property="og:image" content="assets/og.png">
+  <meta property="og:image" content="https://bekendr.lrvdlinden.app/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Bekendr op een iPhone, met nieuwe bekendmakingen in de buurt">
@@ -24,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bekendr: weet wat er in je buurt gebeurt">
   <meta name="twitter:description" content="Officiële bekendmakingen rond je adres, op één plek. Gratis, zonder account en zonder reclame.">
-  <meta name="twitter:image" content="assets/og.png">
+  <meta name="twitter:image" content="https://bekendr.lrvdlinden.app/assets/og.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -33,7 +37,8 @@
   <link rel="stylesheet" href="/assets/style.css">
   <script>document.documentElement.classList.add('js')</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
-    {"@type":"MobileApplication","name":"Bekendr","operatingSystem":"iOS 17, iPadOS 17, macOS 14, Android 8","applicationCategory":"NewsApplication","inLanguage":"nl-NL","countriesSupported":"NL","description":"Officiële bekendmakingen rond je adres: vergunningen, verkeersbesluiten, kap, evenementen en ruimtelijke plannen. Gratis, zonder account en zonder reclame.","featureList":["Bekendmakingen rond een adres of in een wijk of gemeente","Meldingen bij iets nieuws, met stille uren","Lijst en kaart","Bewaren en prullenbak","Synchroniseren via iCloud","Widget","Vergrendelen met Face ID"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+    {"@type":"WebSite","@id":"https://bekendr.lrvdlinden.app/#site","url":"https://bekendr.lrvdlinden.app/","name":"Bekendr","inLanguage":"nl-NL"},
+    {"@type":"MobileApplication","name":"Bekendr","url":"https://bekendr.lrvdlinden.app/","image":"https://bekendr.lrvdlinden.app/assets/icon-512.png","screenshot":"https://bekendr.lrvdlinden.app/assets/og.png","operatingSystem":"iOS 17, iPadOS 17, macOS 14, Android 8","applicationCategory":"NewsApplication","inLanguage":"nl-NL","countriesSupported":"NL","description":"Officiële bekendmakingen rond je adres: vergunningen, verkeersbesluiten, kap, evenementen en ruimtelijke plannen. Gratis, zonder account en zonder reclame.","featureList":["Bekendmakingen rond een adres of in een wijk of gemeente","Meldingen bij iets nieuws, met stille uren","Lijst en kaart","Bewaren en prullenbak","Synchroniseren via iCloud","Widget","Vergrendelen met Face ID"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
   ]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"Kost Bekendr geld?","acceptedAnswer":{"@type":"Answer","text":"Nee. Bekendr is gratis, zonder reclame, zonder abonnement en zonder account."}},
@@ -92,6 +97,7 @@
         <path class="road" d="M520 -20 C 480 200, 600 420, 560 780" style="stroke-width:12"/>
       </svg>
       <div class="hero-copy">
+        <div class="app-badge"><img src="/assets/icon-512.png" alt="" width="64" height="64"><div><b>Bekendr</b><span>Bekendmakingen in je buurt</span></div></div>
         <span class="eyebrow">Gratis · Zonder account · Zonder reclame</span>
         <h1 id="hero-title">Weet wat er in je <span class="mark">buurt<svg viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 90 6, 200 4, 396 18"/></svg></span> gebeurt.</h1>
         <p class="lead">Een dakkapel bij de buren, een kapvergunning in het park of een nieuw bestemmingsplan om de hoek. Bekendr zet alle officiële bekendmakingen rond je adres op één plek, en laat het je weten als er iets nieuws is.</p>
@@ -254,7 +260,7 @@
           </div>
           <div class="feature wide">
             <div class="viz">
-              <div class="v-widget"><small><svg style="width:14px;height:14px"><use href="#i-pin"/></svg>Thuis</small><strong>3</strong><span>nieuwe bekendmakingen</span></div>
+              <div class="v-widget"><small><img src="/assets/icon.png" alt="" width="18" height="18" style="border-radius:5px">Thuis</small><strong>3</strong><span>nieuwe bekendmakingen</span></div>
             </div>
             <h3>Widget op je beginscherm</h3>
             <p>Zie in één oogopslag hoeveel er nieuw is en wat het laatst binnenkwam, zonder de app te openen.</p>
@@ -297,7 +303,7 @@
             <div class="node"><div class="ico"><svg><use href="#i-pin"/></svg></div><b>PDOK</b><span>adressen en gebieden</span></div>
           </div>
           <div class="wire"><i></i><i></i><i></i></div>
-          <div class="node app-node"><div class="ico"><svg><use href="#i-bell"/></svg></div><b>Bekendr</b><span>op je eigen toestel</span></div>
+          <div class="node app-node"><img class="app-icon" src="/assets/icon.png" alt="" width="64" height="64"><b>Bekendr</b><span>op je eigen toestel</span></div>
         </div>
       </div>
     </section>
@@ -352,6 +358,7 @@
     <div class="wrap">
       <section class="cta" aria-labelledby="cta-title">
         <div class="rings" aria-hidden="true"><span></span><span></span><span></span></div>
+        <img class="cta-icon" src="/assets/icon-512.png" alt="Bekendr-app" width="104" height="104">
         <h2 id="cta-title">Mis nooit meer wat er om de hoek gebeurt.</h2>
         <p>Bekendr is gratis voor iPhone, iPad, Mac en Android.</p>
         <div class="actions">

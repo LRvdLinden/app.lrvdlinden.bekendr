@@ -119,6 +119,7 @@ h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.
 .hero-copy > *:nth-child(3) { animation-delay: .16s; }
 .hero-copy > *:nth-child(4) { animation-delay: .24s; }
 .hero-copy > *:nth-child(5) { animation-delay: .32s; }
+.hero-copy > *:nth-child(6) { animation-delay: .4s; }
 
 /* Achtergrond: zachte kaart met straal */
 .backdrop { position: absolute; inset: -40px -10vw 0 auto; width: 70vw; max-width: 900px; z-index: -1; pointer-events: none; opacity: .9; }
@@ -456,3 +457,12 @@ footer { padding: 0 0 50px; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* App-icoon op de site */
+.node .app-icon { width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 15px; box-shadow: 0 12px 26px -12px rgba(39,71,232,.7); animation: float 5s ease-in-out infinite; }
+.node.app-node { border-color: var(--blue); box-shadow: 0 24px 50px -30px rgba(39,71,232,.7); }
+.cta-icon { width: 104px; height: 104px; margin: 0 auto 26px; border-radius: 24px; box-shadow: 0 24px 50px -18px rgba(0,0,0,.45), 0 0 0 6px rgba(255,255,255,.15); animation: float 6s ease-in-out infinite; }
+.app-badge { display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.app-badge img { width: 64px; height: 64px; border-radius: 15px; box-shadow: 0 14px 28px -12px rgba(39,71,232,.65); }
+.app-badge b { display: block; font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+.app-badge span { font-size: 15px; color: var(--muted); }

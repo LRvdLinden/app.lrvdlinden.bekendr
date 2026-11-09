@@ -37,7 +37,7 @@ Mappen: `Bekendr/` (app), `Shared/` (app + widget + deel-extensie), `BekendrWidg
 - Elke APK wordt met dezelfde vaste sleutel ondertekend, zodat updates over de vorige versie heen installeren. De sleutel staat versleuteld in `android/signing/bekendr.jks.enc` en wordt in de workflow ontgrendeld met de repo-secret `APN_P8_CERT`. **Verwijder of wijzig die secret niet**, anders kan de sleutel niet meer worden geopend. Het buildnummer (`versionCode`) is het runnummer van de workflow.
 
 ## Website
-Statische site in `website/` (HTML, CSS en een klein script, zonder externe bronnen of cookies). Léon uploadt hem zelf: zet de inhoud van `website/` in de hoofdmap van de webruimte. De pagina's gebruiken paden vanaf `/`, dus de site moet in de hoofdmap van een domein staan.
+Statische site in `website/` (HTML, CSS en een klein script, zonder externe bronnen of cookies). Léon uploadt hem zelf: zet de inhoud van `website/` in de hoofdmap van de webruimte. Domein: https://bekendr.lrvdlinden.app (in canonical, og-tags, sitemap.xml en robots.txt).
 
 ## CI
 - **Apple-build**: bouwt de app voor iOS en macOS zonder ondertekening (controle of alles compileert).
