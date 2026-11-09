@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: LRvdLinden/app.lrvdlinden
-          ref: 28aaa225e150947f5c66e4af812ed6bd52c45c6f
+          ref: ba75076fd0ff8b525830b25a6441bc840aebe3ba
           sparse-checkout: beheer
       - name: Bouwen (iOS-simulator, zonder ondertekening)
         working-directory: beheer
