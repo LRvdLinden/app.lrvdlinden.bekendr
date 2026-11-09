@@ -1,0 +1,37 @@
+WHAT THE APP DOES
+Bekendr shows official Dutch government public notices ("bekendmakingen": permits, traffic decisions, tree felling, events, zoning plans) around an address or area in the Netherlands that the user chooses. It is for residents of the Netherlands; the app is in Dutch.
+
+HOW TO TEST
+1. First launch: a short splash, then a 3-step welcome. Step 1: tap "Volgende".
+2. Step 2 (location): keep "Straal rond adres" and type a Dutch address, e.g. "Dam 1, Amsterdam", then tap the suggestion. Choose a radius (1 km gives the most results in a city). Alternatively choose "Wijk of gemeente" and type "Amsterdam" (municipality) or a neighbourhood; several areas can be added and are combined into one location.
+3. Step 3: optionally enable notifications, then tap "Aan de slag". The app fetches the notices (this can take a few seconds).
+4. Tab "Jouw buurt": summary of new notices and tiles per category; tap a tile or "Bekijk" to open the list.
+5. Tab "Meldingen": switch between "Lijst" and "Kaart". Swipe a row to save, trash or mark as read. Tap a notice for details and "Bekijk officiële publicatie" (opens officielebekendmakingen.nl).
+6. Tab "Instellingen": add or edit locations (name, radius, areas, categories), notifications with quiet hours, Face ID lock, appearance, saved notices, trash, "Meer apps van de ontwikkelaar".
+7. Widget: add the Bekendr widget on the Home Screen. Share extension: share a text containing an address from another app to Bekendr to add it as a location.
+8. Mac: the same app (iPhone/iPad/Mac with iCloud sync).
+
+REGION AND DATA
+All content is Netherlands-only. Addresses outside the Netherlands cannot be found. The number of notices depends on the area: quiet rural areas can show few or none for a while; use a city address (Amsterdam, Utrecht, Den Haag) with a 1 km radius to see plenty of results. An empty list is therefore not an error.
+
+DATA SOURCES
+- KOOP SRU (repository.overheid.nl/sru), the public open-data source behind officielebekendmakingen.nl.
+- PDOK Locatieserver (api.pdok.nl) for address and area lookup.
+Both are public open-data services of the Dutch government, used as intended. Bekendr is not affiliated with or endorsed by any government body; the app says so in the settings and links every notice to the official publication.
+
+PERMISSIONS
+- Location (when in use): only when the user taps "Gebruik huidige locatie" while adding a location, to fill in the nearest address. The app works fully without it (type an address instead).
+- Notifications: asked in the welcome step or in settings, for local notifications about new notices. Optional.
+- Face ID: only when the user enables the app lock in settings.
+
+ACCOUNT
+No login required. No account exists.
+
+PURCHASES AND ADS
+The app contains no in-app purchases, subscriptions or ads.
+
+OTHER
+- Background app refresh is used to check for new notices periodically; notifications are local (no server, no push service).
+- Locations and read/saved state sync through the user's own iCloud (CloudKit private database).
+- A review prompt (requestReview) appears at most once a week, first after 4 hours of use, at a calm moment.
+- The settings contain a "More apps by the developer" card linking to the developer's other apps.

@@ -1,0 +1,26 @@
+Want to know what is about to change in your neighbourhood? Bekendr shows the official public notices (bekendmakingen) from Dutch municipalities, provinces and water boards that concern your area. A dormer at the neighbours, a street that will be closed, trees being felled or a new zoning plan: you see it right away, in one place.
+
+Choose an address with a radius, or a neighbourhood, district or entire municipality. Bekendr fetches the notices directly from officielebekendmakingen.nl and keeps track of them for you.
+
+WHAT YOU CAN DO
+• Notices around your address (radius from 100 m to 2 km), or in a neighbourhood, district or municipality
+• Combine several neighbourhoods or districts into one location
+• Follow several locations, such as home, work or your parents
+• Clear categories: permits, traffic, trees and felling, events, zoning plans and other rules
+• Choose per location which categories you want to see
+• All notices as a list or on the map, with a colour per category
+• For each notice the distance, the authority, a summary and a link to the official publication
+• Save, mark as read or swipe to the trash
+• A notification when something new appears, with quiet hours at night
+• Home Screen widget
+• Share an address from another app to add it as a location
+• Lock with Face ID or Touch ID
+• Your locations and choices in sync via iCloud on iPhone, iPad and Mac
+
+PRIVACY
+No account, no ads, no tracking. Bekendr has no server of its own: the app fetches the data itself from the public government sources (KOOP and PDOK). Your locations stay on your devices and in your own iCloud.
+
+GOOD TO KNOW
+Bekendr covers the Netherlands only and the app is available in Dutch. Bekendr is not a government app.
+
+Made by Léon van der Linden. The app also shows his other apps.

@@ -1,0 +1,7 @@
+First version of Bekendr:
+• Official public notices around your address, neighbourhood, district or municipality
+• Combine neighbourhoods into one location
+• Notices as a list or on the map, with a colour per category
+• Saved, trash and read status synced via iCloud
+• Notification when something new appears, with quiet hours
+• Home Screen widget

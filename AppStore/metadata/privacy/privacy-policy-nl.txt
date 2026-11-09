@@ -1,0 +1,26 @@
+# Privacyverklaring Bekendr
+
+Laatst bijgewerkt: 9 november 2026
+
+Bekendr toont officiële bekendmakingen rond de locaties die je zelf instelt.
+
+## Wat Bekendr wel en niet doet
+- Bekendr heeft geen account, geen eigen server, geen advertenties en geen analytics of tracking.
+- De adressen en gebieden die je instelt, worden alleen gebruikt om bekendmakingen op te halen. Daarvoor stuurt de app de coördinaten (of de naam van het gebied) rechtstreeks naar:
+  - KOOP (repository.overheid.nl), de bron van officielebekendmakingen.nl;
+  - PDOK (api.pdok.nl), om adressen en gebieden op te zoeken.
+  Deze overheidsdiensten hebben hun eigen privacybeleid.
+- Je huidige locatie wordt alleen gevraagd als je zelf op Gebruik huidige locatie tikt, en alleen gebruikt om het dichtstbijzijnde adres in te vullen.
+- De kaart gebruikt Apple Kaarten (iPhone, iPad, Mac) of OpenStreetMap (Android).
+
+## Opslag
+- iPhone, iPad en Mac: je locaties en wat je met meldingen doet (gelezen, bewaard, prullenbak) worden in je eigen iCloud bewaard, zodat ze op al je apparaten gelijk zijn. De ontwikkelaar kan daar niet bij.
+- Android: alles blijft op je toestel.
+- De opgehaalde bekendmakingen worden op het toestel bewaard (de laatste 30 dagen).
+
+## Meldingen en vergrendeling
+- Meldingen zijn lokaal: de app kijkt zelf of er iets nieuws is. Er gaat geen apparaattoken naar een server.
+- Face ID, Touch ID of je vingerafdruk worden door het besturingssysteem gecontroleerd; Bekendr krijgt die gegevens nooit.
+
+## Contact
+Vragen of opmerkingen: [maak een melding op GitHub](https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues).

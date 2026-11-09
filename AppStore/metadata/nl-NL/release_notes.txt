@@ -1,0 +1,7 @@
+Eerste versie van Bekendr:
+• Officiële bekendmakingen rond je adres, buurt, wijk of gemeente
+• Buurten en wijken samenvoegen tot één locatie
+• Meldingen als lijst of op de kaart, met een kleur per categorie
+• Bewaren, prullenbak en gelezen via iCloud op al je apparaten
+• Melding bij iets nieuws, met stille uren
+• Widget voor je beginscherm

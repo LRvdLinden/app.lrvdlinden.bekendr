@@ -1,0 +1,1 @@
+permit,netherlands,municipality,traffic,tree felling,zoning,neighbourhood,council,government,events

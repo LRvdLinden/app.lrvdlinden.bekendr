@@ -1,0 +1,25 @@
+Privacy policy Bekendr
+Last updated: 9 November 2026
+
+Bekendr shows official public notices around the locations you set yourself.
+
+What Bekendr does and does not do
+- Bekendr has no account, no server of its own, no ads and no analytics or tracking.
+- The addresses and areas you set are only used to fetch notices. To do so, the app sends the coordinates (or the name of the area) directly to:
+  - KOOP (repository.overheid.nl), the source of officielebekendmakingen.nl;
+  - PDOK (api.pdok.nl), to look up addresses and areas.
+  These government services have their own privacy policies.
+- Your current location is only requested when you tap "Use current location" yourself, and only used to fill in the nearest address.
+- The map uses Apple Maps (iPhone, iPad, Mac) or OpenStreetMap (Android).
+
+Storage
+- iPhone, iPad and Mac: your locations and what you do with notices (read, saved, trash) are stored in your own iCloud, so they are the same on all your devices. The developer has no access to it.
+- Android: everything stays on your device.
+- Fetched notices are stored on the device (the last 30 days).
+
+Notifications and lock
+- Notifications are local: the app checks for new notices itself. No device token is sent to a server.
+- Face ID, Touch ID or your fingerprint are checked by the operating system; Bekendr never receives that data.
+
+Contact
+Questions or comments: https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues

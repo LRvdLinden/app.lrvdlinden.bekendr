@@ -1,0 +1,25 @@
+WAT DE APP DOET
+Bekendr toont officiële bekendmakingen van de Nederlandse overheid (vergunningen, verkeersbesluiten, kap, evenementen, ruimtelijke plannen) rond een adres of gebied in Nederland dat de gebruiker kiest. Voor inwoners van Nederland; de app is Nederlandstalig.
+
+ZO TEST JE
+1. Eerste start: kort splashscherm, daarna een welkom in 3 stappen. Stap 1: tik op "Volgende".
+2. Stap 2 (locatie): laat "Straal rond adres" staan en typ een adres, bv. "Dam 1, Amsterdam", en tik op de suggestie. Kies een straal (1 km geeft in een stad de meeste resultaten). Of kies "Wijk of gemeente" en typ "Amsterdam" of een buurt; meerdere gebieden worden samen één locatie.
+3. Stap 3: zet eventueel meldingen aan en tik op "Aan de slag". De app haalt de bekendmakingen op (een paar seconden).
+4. Tab "Jouw buurt": samenvatting en tegels per categorie; tik op een tegel of "Bekijk".
+5. Tab "Meldingen": wissel tussen "Lijst" en "Kaart". Veeg om te bewaren, weg te gooien of als gelezen te markeren. Tik op een melding voor details en "Bekijk officiële publicatie".
+6. Tab "Instellingen": locaties toevoegen of wijzigen, meldingen met stille uren, Face ID, weergave, bewaard, prullenbak, "Meer apps van de ontwikkelaar".
+7. Widget op het beginscherm; deel-extensie: deel een adres vanuit een andere app naar Bekendr.
+8. Mac: dezelfde app, met iCloud-synchronisatie.
+
+REGIO EN GEGEVENS
+Alleen Nederland. Rustige gebieden kunnen een tijd weinig of geen meldingen hebben; gebruik een stadsadres met 1 km straal. Een lege lijst is dus geen fout.
+
+BRONNEN
+KOOP SRU (openbare bron achter officielebekendmakingen.nl) en PDOK Locatieserver. Bekendr is geen app van de overheid en zegt dat ook in de instellingen.
+
+TOESTEMMINGEN
+Locatie alleen bij "Gebruik huidige locatie"; meldingen optioneel; Face ID alleen bij de vergrendeling.
+
+ACCOUNT: geen inlog. AANKOPEN EN ADVERTENTIES: geen.
+
+OVERIG: achtergrondverversing en lokale meldingen, iCloud-synchronisatie, review-vraag hooguit eens per week, kaart "Meer apps van de ontwikkelaar".
