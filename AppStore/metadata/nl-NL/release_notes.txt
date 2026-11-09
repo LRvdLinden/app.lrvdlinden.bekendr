@@ -1,6 +1,0 @@
-Eerste versie van Stookwijzer:
-• Stookadvies van het RIVM voor je locatie
-• Verwachting per 6 uur met wind en luchtkwaliteit
-• Pushmeldingen bij code oranje en rood
-• Widgets voor begin- en toegangsscherm
-• Meerdere plaatsen en een speciale iPad-weergave

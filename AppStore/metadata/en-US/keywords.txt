@@ -1,1 +1,0 @@
-fireplace,air quality,smoke,RIVM,netherlands,burning,code red,fire pit,dutch,pollution,chimney

@@ -3,6 +3,10 @@ xcuserdata/
 *.xcuserstate
 DerivedData/
 build/
-node_modules/
-.wrangler/
-server/worker/.dev.vars
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.keystore
+*.jks

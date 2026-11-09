@@ -1,6 +1,0 @@
-First release of Stookwijzer:
-• RIVM wood-burning advice for your location
-• 6-hour forecast with wind and air quality
-• Push notifications on code orange and red
-• Home Screen and Lock Screen widgets
-• Multiple places and a dedicated iPad layout

@@ -1,90 +1,136 @@
 import Foundation
+import SwiftUI
 
-/// Stookwijzer-code zoals het RIVM die publiceert (advies_N: 0 = geel, 1 = oranje, 2 = rood).
-enum AdviceCode: Int, Codable, CaseIterable, Identifiable {
-    case yellow = 0
-    case orange = 1
-    case red = 2
+/// Indeling van bekendmakingen in Bekendr.
+enum NoticeCategory: String, Codable, CaseIterable, Identifiable, Hashable {
+    case permit, traffic, tree, event, plan, other
 
-    var id: Int { rawValue }
-}
+    var id: String { rawValue }
 
-/// Eén blok in de verwachting.
-struct ForecastSlot: Codable, Identifiable, Equatable {
-    var id: Date { date }
-    let date: Date
-    let code: AdviceCode
-    /// RIVM markeert een blok als 'definitief' zodra het niet meer verandert.
-    let isFinal: Bool
-}
-
-/// Volledig stookadvies voor één locatie.
-struct StookAdvice: Codable, Equatable {
-    let forecast: [ForecastSlot]
-    let fallbackCode: AdviceCode
-    let windMS: Double?
-    let windBft: Int?
-    let lki: Int?
-    let modelRun: Date?
-    let fetchedAt: Date
-
-    /// Het blok dat nu geldt (laatste blok dat al begonnen is).
-    func currentSlot(at date: Date = .now) -> ForecastSlot? {
-        forecast.last(where: { $0.date <= date }) ?? forecast.first
-    }
-
-    func currentCode(at date: Date = .now) -> AdviceCode {
-        currentSlot(at: date)?.code ?? fallbackCode
-    }
-
-    /// Blokken vanaf het huidige blok.
-    func upcoming(from date: Date = .now) -> [ForecastSlot] {
-        guard let current = currentSlot(at: date) else { return forecast }
-        return forecast.filter { $0.date >= current.date }
-    }
-
-    /// Eerstvolgend moment waarop de code verandert.
-    func nextChange(from date: Date = .now) -> ForecastSlot? {
-        let now = currentCode(at: date)
-        return forecast.first { $0.date > date && $0.code != now }
-    }
-}
-
-/// Een opgeslagen plaats (of de huidige locatie).
-struct Place: Codable, Identifiable, Hashable {
-    static let currentLocationID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
-
-    var id: UUID
-    var name: String
-    var subtitle: String?
-    var latitude: Double
-    var longitude: Double
-
-    var isCurrentLocation: Bool { id == Place.currentLocationID }
-}
-
-/// Luchtkwaliteitsindex (LKI) 1–11 volgens RIVM.
-enum AirQuality {
-    static func label(for lki: Int) -> String {
-        switch lki {
-        case ...3: return "Goed"
-        case 4...6: return "Matig"
-        case 7...8: return "Onvoldoende"
-        case 9...10: return "Slecht"
-        default: return "Zeer slecht"
+    /// Meervoud, voor tegels en filters.
+    var name: String {
+        switch self {
+        case .permit: "Vergunningen"
+        case .traffic: "Verkeer"
+        case .tree: "Bomen en kap"
+        case .event: "Evenementen"
+        case .plan: "Ruimtelijke plannen"
+        case .other: "Regels en overig"
         }
     }
+
+    /// Enkelvoud, voor het label boven een melding.
+    var label: String {
+        switch self {
+        case .permit: "Vergunning"
+        case .traffic: "Verkeer"
+        case .tree: "Bomen en kap"
+        case .event: "Evenement"
+        case .plan: "Ruimtelijk plan"
+        case .other: "Overig"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .permit: "house"
+        case .traffic: "exclamationmark.triangle"
+        case .tree: "tree"
+        case .event: "ticket"
+        case .plan: "map"
+        case .other: "doc.text"
+        }
+    }
+
+    /// Volle kleur voor punten op de kaart en iconen.
+    var color: Color {
+        switch self {
+        case .permit: Color(hex: 0x2747E8)
+        case .traffic: Color(hex: 0xE8743B)
+        case .tree: Color(hex: 0x2E8B57)
+        case .event: Color(hex: 0x7B4BD6)
+        case .plan: Color(hex: 0x0F8A8A)
+        case .other: Color(hex: 0x5B6275)
+        }
+    }
+
+    /// Tekstkleur met voldoende contrast in licht en donker.
+    var textColor: Color {
+        switch self {
+        case .permit: Color(light: 0x1B34B0, dark: 0x9DB0FF)
+        case .traffic: Color(light: 0xA4461A, dark: 0xF4A47C)
+        case .tree: Color(light: 0x1E6B40, dark: 0x7FD3A2)
+        case .event: Color(light: 0x5A30AE, dark: 0xC2A6F5)
+        case .plan: Color(light: 0x0B6767, dark: 0x7FD1D1)
+        case .other: Color(light: 0x4A5168, dark: 0xB4BACB)
+        }
+    }
+
+    /// Zachte achtergrond voor tegels en labels.
+    var tint: Color {
+        switch self {
+        case .permit: Color(light: 0xE4E9FD, dark: 0x1D2547)
+        case .traffic: Color(light: 0xFDEBE1, dark: 0x3A2418)
+        case .tree: Color(light: 0xE0F2E8, dark: 0x16301F)
+        case .event: Color(light: 0xEEE7FB, dark: 0x2A1F45)
+        case .plan: Color(light: 0xDDF2F2, dark: 0x123131)
+        case .other: Color(light: 0xECEEF3, dark: 0x262B38)
+        }
+    }
+
+    /// Bepaalt de categorie aan de hand van titel, soort, onderwerp en samenvatting.
+    static func classify(_ parts: [String]) -> NoticeCategory {
+        let text = parts.joined(separator: " ").lowercased()
+        func has(_ words: [String]) -> Bool { words.contains { text.contains($0) } }
+        if has(["kapvergunning", "kappen", "kapmelding", "boom", "bomen", "houtopstand", "herplant"]) { return .tree }
+        if has(["verkeersbesluit", "verkeersmaatregel", "wegafsluiting", "afsluiting van", "parkeerverbod",
+                "parkeerplaats", "gehandicaptenparkeer", "laadpaal", "oplaadpunt", "verkeer", "wegwerk"]) { return .traffic }
+        if has(["evenement", "festival", "kermis", "markt", "braderie", "optocht", "evenementenvergunning"]) { return .event }
+        if has(["omgevingsplan", "bestemmingsplan", "ruimtelijk", "wijzigingsplan", "projectbesluit",
+                "voorbereidingsbesluit", "structuurvisie", "omgevingsvisie", "ter inzage"]) { return .plan }
+        if has(["vergunning", "omgevingsvergunning", "ontheffing", "aanvraag", "melding activiteitenbesluit"]) { return .permit }
+        return .other
+    }
 }
 
-extension StookAdvice {
-    static var preview: StookAdvice {
-        let base = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: .now) / 6 * 6,
-                                         minute: 0, second: 0, of: .now) ?? .now
-        let codes: [AdviceCode] = [.orange, .orange, .yellow, .yellow, .red, .orange, .yellow, .yellow]
-        let slots = codes.enumerated().map { i, c in
-            ForecastSlot(date: base.addingTimeInterval(Double(i) * 6 * 3600), code: c, isFinal: i < 2)
-        }
-        return StookAdvice(forecast: slots, fallbackCode: .orange, windMS: 2.4, windBft: 2,
-                           lki: 5, modelRun: base, fetchedAt: .now)
+/// Eén officiële bekendmaking zoals Bekendr hem bewaart.
+struct Notice: Codable, Identifiable, Hashable {
+    let id: String
+    var title: String
+    var date: Date
+    var creator: String
+    var type: String
+    var subject: String
+    var spatial: String
+    var summary: String
+    var url: URL
+    var latitude: Double?
+    var longitude: Double?
+    var category: NoticeCategory
+    /// Locaties (Place.id) waarbij deze melding hoort, met de afstand in meters (of -1 bij een gebied).
+    var places: [String: Double]
+    var firstSeen: Date
+    /// Gevonden bij de allereerste controle van een locatie: telt niet als nieuw.
+    var initial: Bool
+
+    var hasCoordinate: Bool { latitude != nil && longitude != nil }
+}
+
+/// Gegevens voor de widget, gedeeld via de App Group.
+struct WidgetSnapshot: Codable {
+    struct Item: Codable, Hashable {
+        var id: String
+        var title: String
+        var category: NoticeCategory
+        var date: Date
+        var place: String
     }
+    var updated: Date
+    var newCount: Int
+    var todayCount: Int
+    var weekCount: Int
+    var placeName: String
+    var items: [Item]
+
+    static let empty = WidgetSnapshot(updated: .now, newCount: 0, todayCount: 0, weekCount: 0, placeName: "", items: [])
 }
