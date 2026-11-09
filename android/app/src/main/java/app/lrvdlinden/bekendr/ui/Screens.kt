@@ -731,7 +731,7 @@ fun EditorScreen(repo: Repository, place: Place?, initialQuery: String, pop: () 
     var location by remember {
         mutableStateOf(place?.takeIf { it.lat != 0.0 && it.mode == PlaceMode.radius }?.let { Pdok.Location(it.pdokId, it.address, it.type, it.shortAddress, it.lat, it.lon, it.municipality, it.bounds, emptyList()) })
     }
-    var areas by remember { mutableStateOf(place?.allAreas?.map { it.toLocation() } ?: emptyList()) }
+    var areas by remember { mutableStateOf<List<Pdok.Location>>(place?.allAreas?.map { it.toLocation() } ?: emptyList()) }
     var radius by remember { mutableStateOf(place?.radius ?: 500.0) }
     var categories by remember { mutableStateOf(place?.categories ?: Category.entries.toSet()) }
     var confirmDelete by remember { mutableStateOf(false) }
