@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bekendr: officiële bekendmakingen in je buurt | Gratis app</title>
+  <meta name="description" content="Bekendr laat zien wat er in je buurt gebeurt: vergunningen, verkeersbesluiten, kap, evenementen en ruimtelijke plannen rond je adres. Gratis, zonder account en zonder reclame. Voor iPhone, iPad, Mac en Android.">
+  <meta name="keywords" content="bekendmakingen app, officiële bekendmakingen, omgevingsvergunning in de buurt, vergunningen in mijn straat, kapvergunning melding, verkeersbesluit, bestemmingsplan buurt, bekendmakingen gemeente app, gratis bekendmakingen app">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="author" content="Bekendr">
+  <meta name="application-name" content="Bekendr">
+  <meta name="apple-mobile-web-app-title" content="Bekendr">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#F4F5F8">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Bekendr">
+  <meta property="og:title" content="Bekendr: weet wat er in je buurt gebeurt">
+  <meta property="og:description" content="Officiële bekendmakingen rond je adres, op één plek. Gratis, zonder account en zonder reclame.">
+  <meta property="og:image" content="assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bekendr op een iPhone, met nieuwe bekendmakingen in de buurt">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bekendr: weet wat er in je buurt gebeurt">
+  <meta name="twitter:description" content="Officiële bekendmakingen rond je adres, op één plek. Gratis, zonder account en zonder reclame.">
+  <meta name="twitter:image" content="assets/og.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/schibsted-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+    {"@type":"MobileApplication","name":"Bekendr","operatingSystem":"iOS 17, iPadOS 17, macOS 14, Android 8","applicationCategory":"NewsApplication","inLanguage":"nl-NL","countriesSupported":"NL","description":"Officiële bekendmakingen rond je adres: vergunningen, verkeersbesluiten, kap, evenementen en ruimtelijke plannen. Gratis, zonder account en zonder reclame.","featureList":["Bekendmakingen rond een adres of in een wijk of gemeente","Meldingen bij iets nieuws, met stille uren","Lijst en kaart","Bewaren en prullenbak","Synchroniseren via iCloud","Widget","Vergrendelen met Face ID"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+  ]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"Kost Bekendr geld?","acceptedAnswer":{"@type":"Answer","text":"Nee. Bekendr is gratis, zonder reclame, zonder abonnement en zonder account."}},
+    {"@type":"Question","name":"Waar komen de bekendmakingen vandaan?","acceptedAnswer":{"@type":"Answer","text":"Rechtstreeks van officielebekendmakingen.nl (KOOP), waar gemeenten, provincies, waterschappen en het Rijk hun bekendmakingen publiceren. Adressen en gebieden komen van PDOK."}},
+    {"@type":"Question","name":"Is Bekendr een app van de overheid?","acceptedAnswer":{"@type":"Answer","text":"Nee. Bekendr is een onafhankelijke app die de openbare gegevens van de overheid overzichtelijk laat zien."}},
+    {"@type":"Question","name":"Kan ik via Bekendr bezwaar maken?","acceptedAnswer":{"@type":"Answer","text":"Nee. Een zienswijze of bezwaar dien je in bij de instantie die de bekendmaking publiceerde. Hoe dat gaat, staat in de officiële publicatie; die opent Bekendr met één tik."}}
+  ]}</script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-permit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></symbol>
+      <symbol id="i-traffic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
+      <symbol id="i-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-6"/><path d="M12 3a5 5 0 0 0-4.6 7A4 4 0 0 0 9 18h6a4 4 0 0 0 1.6-8A5 5 0 0 0 12 3z"/></symbol>
+      <symbol id="i-event" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v3a2 2 0 0 0 0 4v3H4v-3a2 2 0 0 0 0-4z"/><path d="M14 8v10"/></symbol>
+      <symbol id="i-plan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+      <symbol id="i-other" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v10h14V10"/></symbol>
+      <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l2.5-8h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z"/></symbol>
+      <symbol id="i-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9v1M15 9v1M12 9v4h-1M9.5 15.5a3.5 3.5 0 0 0 5 0"/></symbol>
+      <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6M9 11h.01M15 11h.01"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+      <symbol id="i-apple" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1.1-3.2-1 .1-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.1.1 2.3-.6 3-1.5z"/></symbol>
+      <symbol id="i-android" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.5l1.7-3a.4.4 0 0 0-.7-.4l-1.8 3A10.6 10.6 0 0 0 12 8.2c-1.7 0-3.3.3-4.8 1L5.4 6.1a.4.4 0 0 0-.7.4l1.7 3C3.6 11 1.8 13.8 1.5 17h21c-.3-3.2-2.1-6-4.9-7.5zM7 14.4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="/"><img src="/assets/icon.png" alt="" width="38" height="38"><span>bekendr</span></a>
+      <nav aria-label="Hoofdmenu">
+        <ul>
+          <li><a href="#hoe">Hoe het werkt</a></li>
+          <li><a href="#categorieen">Categorieën</a></li>
+          <li><a href="#functies">Functies</a></li>
+          <li><a href="#bron">Bron</a></li>
+          <li><a href="#faq">Vragen</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary" href="#download">Download gratis</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero" aria-labelledby="hero-title" style="padding-top:56px">
+      <svg class="backdrop" viewBox="0 0 900 760" aria-hidden="true">
+        <g class="grid">
+          <path d="M0 120H900M0 260H900M0 400H900M0 540H900M0 680H900M150 0V760M330 0V760M510 0V760M690 0V760"/>
+        </g>
+        <path class="road" d="M-20 470 C 200 420, 420 500, 920 360"/>
+        <path class="road" d="M520 -20 C 480 200, 600 420, 560 780" style="stroke-width:12"/>
+      </svg>
+      <div class="hero-copy">
+        <span class="eyebrow">Gratis · Zonder account · Zonder reclame</span>
+        <h1 id="hero-title">Weet wat er in je <span class="mark">buurt<svg viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 90 6, 200 4, 396 18"/></svg></span> gebeurt.</h1>
+        <p class="lead">Een dakkapel bij de buren, een kapvergunning in het park of een nieuw bestemmingsplan om de hoek. Bekendr zet alle officiële bekendmakingen rond je adres op één plek, en laat het je weten als er iets nieuws is.</p>
+        <div class="actions">
+          <a class="btn btn-blue" href="#download"><svg aria-hidden="true"><use href="#i-download"/></svg>Download Bekendr</a>
+          <a class="btn btn-ghost" href="#hoe">Zo werkt het</a>
+        </div>
+        <ul class="platforms">
+          <li><b>iPhone</b> en <b>iPad</b></li>
+          <li><b>Mac</b></li>
+          <li><b>Android</b></li>
+        </ul>
+      </div>
+
+      <div class="stage" aria-hidden="true">
+        <div class="radar"><span></span><span></span><span></span></div>
+        <div class="tilt" id="tilt">
+          <div class="phone">
+            <div class="screen">
+              <div class="island"></div>
+              <div class="app">
+                <div class="date" id="today">Maandag</div>
+                <div class="title">Jouw buurt</div>
+                <div class="chips"><span class="on">Thuis</span><span>Werk</span><span>Ouders</span></div>
+                <div class="summary">
+                  <b><span data-count="3">0</span> nieuwe</b>
+                  <small>binnen 500 m van je adres</small>
+                  <div class="stats"><span><strong data-count="5">0</strong> vandaag</span><span><strong data-count="23">0</strong> deze week</span></div>
+                </div>
+                <div class="tiles">
+                  <div class="tile"><div class="row"><i style="background:#E4E9FD;color:var(--c-permit)"><svg><use href="#i-permit"/></svg></i><em>9</em></div><p>Vergunningen</p></div>
+                  <div class="tile"><div class="row"><i style="background:#FDEBE1;color:var(--c-traffic)"><svg><use href="#i-traffic"/></svg></i><em>4</em></div><p>Verkeer</p></div>
+                  <div class="tile"><div class="row"><i style="background:#E0F2E8;color:var(--c-tree)"><svg><use href="#i-tree"/></svg></i><em>3</em></div><p>Bomen en kap</p></div>
+                  <div class="tile"><div class="row"><i style="background:#EEE7FB;color:var(--c-event)"><svg><use href="#i-event"/></svg></i><em>2</em></div><p>Evenementen</p></div>
+                  <div class="tile"><div class="row"><i style="background:#DDF2F2;color:var(--c-plan)"><svg><use href="#i-plan"/></svg></i><em>1</em></div><p>Ruimtelijke plannen</p></div>
+                  <div class="tile"><div class="row"><i style="background:#ECEEF3;color:var(--c-other)"><svg><use href="#i-other"/></svg></i><em>4</em></div><p>Regels en overig</p></div>
+                </div>
+              </div>
+              <div class="tabbar">
+                <span class="on"><svg><use href="#i-home"/></svg>Jouw buurt</span>
+                <span><svg><use href="#i-inbox"/></svg>Meldingen</span>
+                <span><svg><use href="#i-gear"/></svg>Instellingen</span>
+              </div>
+            </div>
+          </div>
+          <div class="toasts" id="toasts"></div>
+        </div>
+        <div class="float-card fc-1"><span class="dot" style="background:var(--c-tree);color:#fff"><svg><use href="#i-tree"/></svg></span><span>Kapvergunning<small>460 m · vandaag</small></span></div>
+        <div class="float-card fc-2"><span class="dot" style="background:var(--c-traffic);color:#fff"><svg><use href="#i-traffic"/></svg></span><span>Verkeersbesluit<small>320 m · vandaag</small></span></div>
+        <div class="float-card fc-3"><span class="dot" style="background:var(--c-event);color:#fff"><svg><use href="#i-event"/></svg></span><span>Evenement<small>gisteren</small></span></div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="Voorbeelden van bekendmakingen">
+      <div class="ticker-track" id="ticker"></div>
+    </div>
+
+    <section class="wrap" id="hoe" aria-labelledby="hoe-title">
+      <div class="how">
+        <div>
+          <div class="section-head">
+            <span class="eyebrow">Hoe het werkt</span>
+            <h2 id="hoe-title">Drie stappen, daarna let Bekendr voor je op.</h2>
+          </div>
+          <ol class="steps" id="steps">
+            <li data-step="1"><h3>Kies je adres of gebied</h3><p>Ieder adres in Nederland kan. Of volg een hele woonplaats, wijk, buurt of gemeente.</p></li>
+            <li data-step="2"><h3>Stel je straal in</h3><p>Van 100 meter tot 2 kilometer. Volg ook je werk of het huis van je ouders, elk met een eigen straal.</p></li>
+            <li data-step="3"><h3>Zie wat er speelt</h3><p>Nieuwe bekendmakingen verschijnen op de kaart en in je lijst. Bij iets nieuws krijg je een melding.</p></li>
+          </ol>
+        </div>
+        <div class="mapbox" id="mapbox" data-step="0" aria-hidden="true">
+          <svg class="base" viewBox="0 0 600 516" preserveAspectRatio="xMidYMid slice">
+            <rect width="600" height="516" fill="#EEF0EA"/>
+            <rect x="40" y="60" width="150" height="120" rx="16" fill="#D5E8CF"/>
+            <rect x="380" y="330" width="170" height="130" rx="18" fill="#D5E8CF"/>
+            <path d="M420 40 c60 30 120 10 160 60 l0 120 c-60 -20 -110 10 -160 -20z" fill="#C9DDF2"/>
+            <rect x="250" y="70" width="90" height="70" rx="10" fill="#DDE1D6"/>
+            <rect x="90" y="330" width="120" height="80" rx="10" fill="#DDE1D6"/>
+            <path d="M-20 300 C 180 250, 360 330, 620 230" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round"/>
+            <path d="M300 -20 C 270 160, 340 330, 300 540" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <path d="M-20 120 L 620 160" stroke="#fff" stroke-width="10" fill="none"/>
+            <path d="M-20 450 L 620 420" stroke="#fff" stroke-width="10" fill="none"/>
+          </svg>
+          <svg class="area" viewBox="0 0 600 516" preserveAspectRatio="xMidYMid slice"><path d="M150 140 L 330 100 L 470 170 L 450 330 L 300 400 L 170 340 Z"/></svg>
+          <div class="ring"></div>
+          <div class="home"><svg style="color:#fff"><use href="#i-home"/></svg></div>
+          <div class="pin" style="left:38%;top:34%;background:var(--c-permit);color:#fff"><svg><use href="#i-permit"/></svg></div>
+          <div class="pin" style="left:66%;top:40%;background:var(--c-traffic);color:#fff"><svg><use href="#i-traffic"/></svg></div>
+          <div class="pin" style="left:61%;top:66%;background:var(--c-tree);color:#fff"><svg><use href="#i-tree"/></svg></div>
+          <div class="pin" style="left:34%;top:62%;background:var(--c-event);color:#fff"><svg><use href="#i-event"/></svg></div>
+          <div class="label"><span class="dot" style="width:36px;height:36px;border-radius:50%;background:var(--c-permit);display:grid;place-items:center;flex:none;color:#fff"><svg style="width:16px;height:16px"><use href="#i-permit"/></svg></span><div><b>Omgevingsvergunning aangevraagd</b><span>40 m van Thuis · vandaag</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="categorieen" aria-labelledby="cat-title" style="padding-top:20px">
+      <div class="section-head">
+        <span class="eyebrow">Categorieën</span>
+        <h2 id="cat-title">Alles wat de overheid in je buurt bekendmaakt.</h2>
+        <p>Bekendr deelt elke bekendmaking in. Per locatie kies je wat je wilt volgen.</p>
+      </div>
+      <div class="cats">
+        <div class="cat" style="--c:var(--c-permit);--t:#E4E9FD"><i><svg><use href="#i-permit"/></svg></i><h3>Vergunningen</h3><p>Verbouwingen, dakkapellen, nieuwbouw, uitritten en sloop. Aanvragen én besluiten.</p></div>
+        <div class="cat" style="--c:var(--c-traffic);--t:#FDEBE1"><i><svg><use href="#i-traffic"/></svg></i><h3>Verkeer</h3><p>Verkeersbesluiten, parkeerplaatsen, laadpalen, afsluitingen en wegwerkzaamheden.</p></div>
+        <div class="cat" style="--c:var(--c-tree);--t:#E0F2E8"><i><svg><use href="#i-tree"/></svg></i><h3>Bomen en kap</h3><p>Kapvergunningen en kapmeldingen, zodat je weet welke bomen er verdwijnen.</p></div>
+        <div class="cat" style="--c:var(--c-event);--t:#EEE7FB"><i><svg><use href="#i-event"/></svg></i><h3>Evenementen</h3><p>Festivals, markten, kermis en braderieën: weet vooraf wanneer het druk wordt.</p></div>
+        <div class="cat" style="--c:var(--c-plan);--t:#DDF2F2"><i><svg><use href="#i-plan"/></svg></i><h3>Ruimtelijke plannen</h3><p>Omgevingsplannen, bestemmingsplannen en plannen die ter inzage liggen.</p></div>
+        <div class="cat" style="--c:var(--c-other);--t:#ECEEF3"><i><svg><use href="#i-other"/></svg></i><h3>Regels en overig</h3><p>Verordeningen, beleidsregels en alle andere officiële publicaties.</p></div>
+      </div>
+    </section>
+
+    <section class="dark" id="functies" aria-labelledby="func-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Functies</span>
+          <h2 id="func-title">Klein, rustig en precies genoeg.</h2>
+          <p>Geen tijdlijn vol reclame. Alleen wat er in je straat, wijk of gemeente echt gebeurt.</p>
+        </div>
+        <div class="features">
+          <div class="feature wide">
+            <div class="viz">
+              <div class="v-bell"><svg style="color:#fff"><use href="#i-bell"/></svg></div>
+              <svg class="v-moon"><use href="#i-moon"/></svg>
+            </div>
+            <h3>Een melding bij iets nieuws</h3>
+            <p>Bekendr kijkt zelf of er iets bij is gekomen. 's Nachts komen meldingen stil binnen, zodat je er niet wakker van wordt.</p>
+          </div>
+          <div class="feature wide">
+            <div class="viz">
+              <div class="v-swipe">
+                <div class="v-row"><div class="front"><i></i><u></u></div></div>
+                <div class="v-row swipe"><div class="act"><span style="background:#2747E8">Bewaren</span><span style="background:#C62F3A">Prullenbak</span></div><div class="front"><i></i><u></u></div></div>
+                <div class="v-row"><div class="front"><i style="background:transparent"></i><u></u></div></div>
+              </div>
+            </div>
+            <h3>Bewaren en weggooien</h3>
+            <p>Veeg om iets te bewaren of in de prullenbak te gooien. Daar blijft het nog 30 dagen staan.</p>
+          </div>
+          <div class="feature">
+            <div class="viz v-area">
+              <svg viewBox="0 0 200 150"><path d="M30 40 L 110 18 L 175 60 L 160 120 L 85 135 L 25 100 Z"/><circle cx="100" cy="78" r="6"/></svg>
+            </div>
+            <h3>Straal of heel gebied</h3>
+            <p>Volg een adres met een straal, of een hele wijk, buurt, woonplaats of gemeente.</p>
+          </div>
+          <div class="feature">
+            <div class="viz">
+              <svg class="v-cloud"><use href="#i-cloud"/></svg>
+              <div class="v-sync" style="margin-top:30px"><div class="v-dev phone-s"><b></b></div><div class="v-dev pad"><b></b></div><div class="v-dev mac"><b></b></div></div>
+            </div>
+            <h3>Op al je Apple-apparaten</h3>
+            <p>Locaties, gelezen en bewaard gaan via je eigen iCloud mee naar iPhone, iPad en Mac.</p>
+          </div>
+          <div class="feature">
+            <div class="viz">
+              <div class="v-face"><svg><use href="#i-face"/></svg><span class="scan"></span></div>
+            </div>
+            <h3>Op slot met Face ID</h3>
+            <p>Wil je niet dat anderen meekijken? Zet vergrendeling aan met Face ID, Touch ID of je vingerafdruk.</p>
+          </div>
+          <div class="feature wide">
+            <div class="viz">
+              <div class="v-widget"><small><svg style="width:14px;height:14px"><use href="#i-pin"/></svg>Thuis</small><strong>3</strong><span>nieuwe bekendmakingen</span></div>
+            </div>
+            <h3>Widget op je beginscherm</h3>
+            <p>Zie in één oogopslag hoeveel er nieuw is en wat het laatst binnenkwam, zonder de app te openen.</p>
+          </div>
+          <div class="feature wide">
+            <div class="viz">
+              <div style="display:flex;gap:14px;align-items:center">
+                <span class="v-pin-stack" style="display:flex;gap:10px">
+                  <span class="dot" style="width:40px;height:40px;border-radius:50%;background:var(--c-permit);border:3px solid #fff;display:grid;place-items:center;color:#fff;animation:float 4s ease-in-out infinite"><svg style="width:18px;height:18px"><use href="#i-permit"/></svg></span>
+                  <span class="dot" style="width:40px;height:40px;border-radius:50%;background:var(--c-traffic);border:3px solid #fff;display:grid;place-items:center;color:#fff;animation:float 4s .5s ease-in-out infinite"><svg style="width:18px;height:18px"><use href="#i-traffic"/></svg></span>
+                  <span class="dot" style="width:40px;height:40px;border-radius:50%;background:var(--c-tree);border:3px solid #fff;display:grid;place-items:center;color:#fff;animation:float 4s 1s ease-in-out infinite"><svg style="width:18px;height:18px"><use href="#i-tree"/></svg></span>
+                  <span class="dot" style="width:40px;height:40px;border-radius:50%;background:var(--c-event);border:3px solid #fff;display:grid;place-items:center;color:#fff;animation:float 4s 1.5s ease-in-out infinite"><svg style="width:18px;height:18px"><use href="#i-event"/></svg></span>
+                </span>
+              </div>
+            </div>
+            <h3>Lijst of kaart</h3>
+            <p>Bekijk alles als lijst per dag, of op de kaart met een gekleurd punt per soort bekendmaking.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="bron" aria-labelledby="bron-title">
+      <div class="source">
+        <div>
+          <div class="section-head" style="margin-bottom:0">
+            <span class="eyebrow">Bron</span>
+            <h2 id="bron-title">Rechtstreeks van de overheid naar je telefoon.</h2>
+            <p>Gemeenten, provincies, waterschappen en het Rijk publiceren hun bekendmakingen op officielebekendmakingen.nl. Bekendr haalt ze daar zelf op.</p>
+          </div>
+          <ul class="checks">
+            <li><span><b>Geen eigen server.</b> Je adres gaat niet naar ons, alleen naar de openbare overheidsbronnen.</span></li>
+            <li><span><b>Geen account en geen reclame.</b> Openen en gaan.</span></li>
+            <li><span><b>Altijd de officiële tekst.</b> Met één tik open je de publicatie zelf.</span></li>
+          </ul>
+        </div>
+        <div class="flow" aria-hidden="true">
+          <div class="nodes-stack">
+            <div class="node"><div class="ico"><svg><use href="#i-building"/></svg></div><b>KOOP</b><span>officielebekendmakingen.nl</span></div>
+            <div class="node"><div class="ico"><svg><use href="#i-pin"/></svg></div><b>PDOK</b><span>adressen en gebieden</span></div>
+          </div>
+          <div class="wire"><i></i><i></i><i></i></div>
+          <div class="node app-node"><div class="ico"><svg><use href="#i-bell"/></svg></div><b>Bekendr</b><span>op je eigen toestel</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="download" aria-labelledby="dl-title" style="padding-top:20px">
+      <div class="section-head">
+        <span class="eyebrow">Download</span>
+        <h2 id="dl-title">Voor Apple en Android.</h2>
+      </div>
+      <div class="platform-grid">
+        <div class="plat">
+          <h3><svg aria-hidden="true"><use href="#i-apple"/></svg>iPhone, iPad en Mac</h3>
+          <ul>
+            <li>Synchroniseert via je eigen iCloud</li>
+            <li>Widget voor je beginscherm en vergrendelscherm</li>
+            <li>Deel een adres vanuit Kaarten naar Bekendr</li>
+            <li>Vergrendelen met Face ID of Touch ID</li>
+          </ul>
+          <span class="btn btn-primary" aria-disabled="true" style="cursor:default"><svg aria-hidden="true"><use href="#i-apple"/></svg>Binnenkort in de App Store</span>
+          <span class="note">iOS 17, iPadOS 17 of macOS 14 en nieuwer</span>
+        </div>
+        <div class="plat">
+          <h3><svg aria-hidden="true" style="color:#3DDC84"><use href="#i-android"/></svg>Android</h3>
+          <ul>
+            <li>Alles blijft op je eigen toestel</li>
+            <li>Kaart met OpenStreetMap</li>
+            <li>Deel een adres naar Bekendr</li>
+            <li>Vergrendelen met vingerafdruk of gezicht</li>
+          </ul>
+          <a class="btn btn-blue" href="https://github.com/LRvdLinden/app.lrvdlinden.bekendr/releases" rel="noopener"><svg aria-hidden="true"><use href="#i-download"/></svg>Download de APK</a>
+          <span class="note">Android 8 en nieuwer · sta installeren uit deze bron toe</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="faq" aria-labelledby="faq-title" style="padding-top:20px">
+      <div class="section-head">
+        <span class="eyebrow">Vragen</span>
+        <h2 id="faq-title">Goed om te weten.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Kost Bekendr geld?</summary><p>Nee. Bekendr is gratis, zonder reclame, zonder abonnement en zonder account.</p></details>
+        <details><summary>Waar komen de bekendmakingen vandaan?</summary><p>Rechtstreeks van officielebekendmakingen.nl (KOOP), waar gemeenten, provincies, waterschappen en het Rijk hun bekendmakingen publiceren. Adressen en gebieden komen van PDOK, de kaartendienst van de overheid.</p></details>
+        <details><summary>Is Bekendr een app van de overheid?</summary><p>Nee. Bekendr is een onafhankelijke app die de openbare gegevens van de overheid overzichtelijk laat zien. Voor de officiële tekst opent Bekendr altijd de publicatie zelf.</p></details>
+        <details><summary>Kan ik via Bekendr bezwaar maken?</summary><p>Nee. Een zienswijze of bezwaar dien je in bij de instantie die de bekendmaking publiceerde. Hoe dat gaat en tot wanneer het kan, staat in de officiële publicatie.</p></details>
+        <details><summary>Hoe vaak kijkt Bekendr of er iets nieuws is?</summary><p>Elke keer dat je de app opent, en daarnaast zelf op de achtergrond: op Android ongeveer elk uur, op iPhone en iPad zo vaak als het systeem toestaat.</p></details>
+        <details><summary>Waarom zie ik een bekendmaking zonder punt op de kaart?</summary><p>Niet elke bekendmaking heeft een exact adres. Sommige gelden voor een hele gemeente of een gebied. Die staan wel in de lijst.</p></details>
+        <details><summary>Klopt een locatie niet?</summary><p>Tik in de bekendmaking op <em>Locatie klopt niet?</em> en laat weten wat er mis is. Dan kijken we of de indeling beter kan.</p></details>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="rings" aria-hidden="true"><span></span><span></span><span></span></div>
+        <h2 id="cta-title">Mis nooit meer wat er om de hoek gebeurt.</h2>
+        <p>Bekendr is gratis voor iPhone, iPad, Mac en Android.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#download"><svg aria-hidden="true"><use href="#i-download"/></svg>Download Bekendr</a>
+          <a class="btn btn-ghost" href="/support/">Vraag of idee?</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <a class="more-apps" href="https://lrvdlinden.app" rel="noopener">
+        <img src="/assets/lr-logo.png" alt="" width="56" height="56">
+        <span><b>Meer apps van de ontwikkelaar</b><span>Apps voor iPhone, iPad, Apple TV en Homey</span></span>
+        <em>Bekijk</em>
+      </a>
+      <div class="foot">
+        <span>&copy; <span id="year">2026</span> Bekendr · Bekendr is geen app van de overheid. Gegevens: KOOP en PDOK.</span>
+        <nav aria-label="Voettekst">
+          <a href="/privacy/">Privacy</a>
+          <a href="/support/">Support</a>
+          <a href="https://www.officielebekendmakingen.nl" rel="noopener">Officiële bekendmakingen</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+  <script src="/assets/site.js" defer></script>
+</body>
+</html>
