@@ -87,19 +87,26 @@ jobs:
           V=$(grep -m1 'versionName' app/build.gradle.kts | sed -E 's/.*"(.*)".*/\1/')
           B=${{ github.run_number }}
           cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Bekendr-$V-build$B.apk"
+          # Vaste naam, zodat .../releases/latest/download/Bekendr.apk altijd de nieuwste is.
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/Bekendr.apk"
           echo "APK=$RUNNER_TEMP/Bekendr-$V-build$B.apk" >> "$GITHUB_ENV"
+          echo "APK_LATEST=$RUNNER_TEMP/Bekendr.apk" >> "$GITHUB_ENV"
           echo "VER=$V" >> "$GITHUB_ENV"; echo "BUILD=$B" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v4
         with:
           name: Bekendr-android
           path: ${{ env.APK }}
-      - name: Downloadbare APK in Releases
+      - name: Downloadbare APK in Releases (nieuwste)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-${{ env.VER }}-build${{ env.BUILD }}
           name: Bekendr voor Android ${{ env.VER }} (build ${{ env.BUILD }})
-          body: Losse APK voor Android. Download het bestand en open het op je telefoon om te installeren.
-          prerelease: true
-          make_latest: false
-          files: ${{ env.APK }}
+          body: |
+            Losse APK voor Android. Download het bestand en open het op je telefoon om te installeren.
+            Directe link naar altijd de nieuwste versie: https://github.com/${{ github.repository }}/releases/latest/download/Bekendr.apk
+          prerelease: false
+          make_latest: true
+          files: |
+            ${{ env.APK }}
+            ${{ env.APK_LATEST }}
           overwrite_files: true

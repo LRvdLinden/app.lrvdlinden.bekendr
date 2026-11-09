@@ -33,7 +33,7 @@ Gebaseerd op het idee van de Homey-app *Bekendmakingen NL* en de werking van Omg
 Mappen: `Bekendr/` (app), `Shared/` (app + widget + deel-extensie), `BekendrWidget/`, `BekendrShare/`. Het zijn gesynchroniseerde mappen: nieuwe bestanden verschijnen vanzelf in Xcode.
 
 ## Android: bouwen
-- Elke push naar `android/` bouwt via **Android-APK** een ondertekende release-APK en zet die in Releases.
+- Elke push naar `android/` bouwt via **Android-APK** een ondertekende release-APK en zet die in Releases als *latest*, ook onder de vaste naam `Bekendr.apk`. Directe download van altijd de nieuwste versie: https://github.com/LRvdLinden/app.lrvdlinden.bekendr/releases/latest/download/Bekendr.apk
 - Lokaal: open `android/` in Android Studio, of `./gradlew assembleRelease`.
 - Elke APK wordt met dezelfde vaste sleutel ondertekend, zodat updates over de vorige versie heen installeren. De sleutel staat versleuteld in `android/signing/bekendr.jks.enc` en wordt in de workflow ontgrendeld met de repo-secret `APN_P8_CERT`. **Verwijder of wijzig die secret niet**, anders kan de sleutel niet meer worden geopend. Het buildnummer (`versionCode`) is het runnummer van de workflow.
 
