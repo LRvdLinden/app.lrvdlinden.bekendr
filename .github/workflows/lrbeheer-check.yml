@@ -1,0 +1,17 @@
+name: LRbeheer-check (tijdelijk)
+on: push
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: LRvdLinden/app.lrvdlinden
+          ref: 28aaa225e150947f5c66e4af812ed6bd52c45c6f
+          sparse-checkout: beheer
+      - name: Bouwen (iOS-simulator, zonder ondertekening)
+        working-directory: beheer
+        run: |
+          set -o pipefail
+          xcodebuild -project LRbeheer.xcodeproj -scheme LRbeheer -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | grep -E "error:|warning: .*Bekendr|BUILD (SUCCEEDED|FAILED)" | head -80
