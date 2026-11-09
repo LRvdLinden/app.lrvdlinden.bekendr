@@ -19,6 +19,12 @@ struct NoticeMapView: View {
         ZStack(alignment: .bottom) {
             Map(position: $position, selection: $selectedID) {
                 ForEach(places) { place in
+                    if place.mode == .route, let route = place.route {
+                        MapPolyline(coordinates: route.coordinates)
+                            .stroke(Theme.accentFill.opacity(0.18), style: StrokeStyle(lineWidth: 14, lineCap: .round, lineJoin: .round))
+                        MapPolyline(coordinates: route.coordinates)
+                            .stroke(Theme.accentFill.opacity(0.8), lineWidth: 4)
+                    }
                     if place.mode == .radius {
                         MapCircle(center: place.coordinate, radius: place.radius)
                             .foregroundStyle(Theme.accentFill.opacity(0.08))

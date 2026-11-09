@@ -78,7 +78,7 @@ struct OnboardingView: View {
                 stepHeader(title: "Kies je eerste locatie",
                            text: "Ieder adres in Nederland kan. Later voeg je er meer toe, zoals je werk of een wijk.")
                 Picker("Soort", selection: $draft.mode) {
-                    ForEach(PlaceMode.allCases) { Text($0.label).tag($0) }
+                    ForEach(PlaceMode.allCases.filter { $0 != .route }) { Text($0.label).tag($0) }
                 }
                 .pickerStyle(.segmented)
                 if draft.mode == .area {

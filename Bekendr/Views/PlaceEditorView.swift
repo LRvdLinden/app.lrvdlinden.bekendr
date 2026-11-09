@@ -7,11 +7,22 @@ struct PlaceMapPreview: View {
     let locations: [PDOKClient.Location]
     let mode: PlaceMode
     let radius: Double
+    var route: RouteInfo? = nil
     @State private var polygons: [String: [[CLLocationCoordinate2D]]] = [:]
 
     var body: some View {
         Map(position: .constant(position), interactionModes: []) {
-            if mode == .radius, let center = locations.first?.coordinate {
+            if mode == .route, let route {
+                MapPolyline(coordinates: route.coordinates)
+                    .stroke(Theme.accentFill.opacity(0.18), style: StrokeStyle(lineWidth: max(8, radius / 25), lineCap: .round, lineJoin: .round))
+                MapPolyline(coordinates: route.coordinates)
+                    .stroke(Theme.accentFill, lineWidth: 4)
+                ForEach(Array(route.stops.enumerated()), id: \.offset) { i, stop in
+                    Marker(stop.name, systemImage: i == 0 ? "circle" : (i == route.stops.count - 1 ? "flag.checkered" : "smallcircle.filled.circle"),
+                           coordinate: stop.coordinate)
+                        .tint(i == route.stops.count - 1 ? Theme.home : Theme.accentFill)
+                }
+            } else if mode == .radius, let center = locations.first?.coordinate {
                 MapCircle(center: center, radius: radius)
                     .foregroundStyle(Theme.accentFill.opacity(0.12))
                     .stroke(Theme.accentFill.opacity(0.7), lineWidth: 2)
@@ -48,6 +59,10 @@ struct PlaceMapPreview: View {
     }
 
     private var position: MapCameraPosition {
+        if mode == .route, let b = route?.bounds {
+            let span = MKCoordinateSpan(latitudeDelta: max(b.maxLat - b.minLat, 0.01) * 1.3, longitudeDelta: max(b.maxLon - b.minLon, 0.01) * 1.3)
+            return .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (b.minLat + b.maxLat) / 2, longitude: (b.minLon + b.maxLon) / 2), span: span))
+        }
         if mode == .area {
             let bounds = locations.compactMap(\.bounds)
             if let minLat = bounds.map(\.minLat).min(), let maxLat = bounds.map(\.maxLat).max(),
@@ -72,11 +87,11 @@ struct PlaceOptionsSection: View {
     @Binding var draft: PlaceDraft
 
     var body: some View {
-        if draft.mode == .radius {
+        if draft.mode != .area {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("Straal")
+                        Text(draft.mode == .route ? "Afstand tot de route" : "Straal")
                         Spacer()
                         Text(Format.distance(draft.radius)).foregroundStyle(Theme.accent).fontWeight(.semibold)
                     }
@@ -141,6 +156,8 @@ struct PlaceEditorView: View {
                 Group {
                     if draft.mode == .area {
                         AreaPicker(areas: $draft.areas)
+                    } else if draft.mode == .route {
+                        RoutePicker(draft: $draft)
                     } else {
                         LocationSearchField(mode: .radius, selection: $draft.location, initialQuery: initialQuery)
                     }
@@ -149,12 +166,14 @@ struct PlaceEditorView: View {
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
 
                 if draft.isValid {
-                    PlaceMapPreview(locations: draft.previewLocations, mode: draft.mode, radius: draft.radius)
+                    PlaceMapPreview(locations: draft.previewLocations, mode: draft.mode, radius: draft.radius, route: draft.route)
                         .listRowInsets(EdgeInsets())
                 }
             } footer: {
                 if draft.mode == .area {
                     Text("Je krijgt de bekendmakingen binnen alle gekozen gebieden samen, ook die voor een hele gemeente gelden.")
+                } else if draft.mode == .route {
+                    Text("Bijvoorbeeld je vaste route naar werk of school. Je krijgt de bekendmakingen met een punt op de kaart die dicht bij de route liggen, zoals wegafsluitingen en werkzaamheden. Routes berekent Apple Kaarten; ze staan niet in de Android-app.")
                 }
             }
 
@@ -205,7 +224,10 @@ struct PlaceEditorView: View {
         }
         .onChange(of: draft.mode) { _, mode in
             // Alleen wissen als het gekozen adres of gebied niet bij de nieuwe soort past.
-            if let type = draft.location?.type, (mode == .radius) != (type == "adres") { draft.location = nil }
+            if mode == .route {
+                if draft.radius > 1000 { draft.radius = 300 }
+                if place == nil, draft.name == "Thuis" || draft.name.hasPrefix("Locatie ") { draft.name = "Route"; draft.symbol = "car" }
+            } else if let type = draft.location?.type, (mode == .radius) != (type == "adres") { draft.location = nil }
         }
         #if os(macOS)
         .frame(minWidth: 460, minHeight: 620)

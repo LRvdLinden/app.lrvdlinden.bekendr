@@ -175,6 +175,7 @@ struct WhatsNewView: View {
                     Label("Feedback met een reden als er iets niet klopt", systemImage: "exclamationmark.bubble")
                     Label("Straatbeeld bij een melding (Look Around)", systemImage: "binoculars")
                     Label("Alles in één keer weggooien, terugzetten of de prullenbak legen", systemImage: "trash")
+                    Label("Routes volgen: bekendmakingen langs je vaste route, zoals naar werk", systemImage: "car")
                     Label("Over Bekendr met bronnen en disclaimer", systemImage: "info.circle")
                 }
             }

@@ -12,6 +12,10 @@ struct PlaceDraft: Equatable {
     var areas: [PDOKClient.Location] = []
     var radius: Double = 500
     var categories = Set(NoticeCategory.allCases)
+    /// Punten van een route: vertrek, tussenstops, bestemming (alleen Apple).
+    var routeStops: [PDOKClient.Location] = []
+    var transport: RouteTransport = .auto
+    var route: RouteInfo?
 
     init() {}
 
@@ -23,6 +27,11 @@ struct PlaceDraft: Equatable {
         categories = place.categories
         if place.mode == .area {
             areas = place.areas.map(\.location)
+        } else if place.mode == .route, let r = place.route {
+            route = r
+            transport = r.transport
+            routeStops = r.stops.map { .init(id: "", label: $0.label, type: "adres", name: $0.name, latitude: $0.latitude,
+                                             longitude: $0.longitude, municipality: "", bounds: nil, polygons: []) }
         } else if place.isConfigured {
             var bounds: KoopClient.Bounds?
             if place.maxLatitude > place.minLatitude {
@@ -40,12 +49,22 @@ struct PlaceDraft: Equatable {
         switch mode {
         case .radius: return location?.type == "adres"
         case .area: return !areas.isEmpty
+        case .route: return routeStops.count >= 2 && route != nil
         }
+    }
+
+    /// De punten van de route zoals Apple Kaarten ze nodig heeft.
+    var routeStopInfo: [RouteInfo.Stop] {
+        routeStops.map { .init(name: $0.name, label: $0.label, latitude: $0.latitude, longitude: $0.longitude) }
     }
 
     /// Wat er op het kaartje komt.
     var previewLocations: [PDOKClient.Location] {
-        mode == .area ? areas : (location.map { [$0] } ?? [])
+        switch mode {
+        case .area: areas
+        case .route: routeStops
+        case .radius: location.map { [$0] } ?? []
+        }
     }
 
     mutating func addArea(_ area: PDOKClient.Location) {
@@ -70,7 +89,22 @@ struct PlaceDraft: Equatable {
             place.areaTypeRaw = ""
             place.areas = []
             place.minLatitude = 0; place.maxLatitude = 0; place.minLongitude = 0; place.maxLongitude = 0
+            place.route = nil
+        case .route:
+            guard let route, let first = routeStops.first else { return }
+            place.route = route
+            place.areas = []
+            place.address = route.title
+            place.pdokID = ""
+            place.areaTypeRaw = ""
+            place.municipality = first.municipality
+            place.latitude = first.latitude
+            place.longitude = first.longitude
+            if let b = route.bounds {
+                place.minLatitude = b.minLat; place.maxLatitude = b.maxLat; place.minLongitude = b.minLon; place.maxLongitude = b.maxLon
+            }
         case .area:
+            place.route = nil
             guard let first = areas.first else { return }
             place.areas = areas.map(AreaRef.init)
             place.address = areas.map(\.name).joined(separator: " + ")
@@ -94,7 +128,7 @@ struct PlaceDraft: Equatable {
     }
 
     static let symbols: [(symbol: String, label: String)] = [
-        ("house", "Thuis"), ("briefcase", "Werk"), ("heart", "Familie"), ("mappin", "Overig"),
+        ("house", "Thuis"), ("briefcase", "Werk"), ("heart", "Familie"), ("car", "Route"), ("mappin", "Overig"),
     ]
 }
 
@@ -295,6 +329,72 @@ struct AreaPicker: View {
                  : "Je kunt meerdere buurten of wijken kiezen; ze worden samen één locatie.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+        }
+    }
+}
+
+/// Route kiezen: vertrekpunt, eventueel tussenstops en de bestemming, met Apple Kaarten.
+struct RoutePicker: View {
+    @Binding var draft: PlaceDraft
+    @State private var planning = false
+    @State private var error: String?
+    @State private var pick: PDOKClient.Location?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(Array(draft.routeStops.enumerated()), id: \.offset) { i, stop in
+                HStack(spacing: 10) {
+                    Image(systemName: i == 0 ? "circle.circle" : (i == draft.routeStops.count - 1 ? "flag.checkered" : "smallcircle.filled.circle"))
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: 22)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(stop.name)
+                        Text(i == 0 ? "Vertrekpunt" : (i == draft.routeStops.count - 1 ? "Bestemming" : "Tussenstop \(i)"))
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button { draft.routeStops.remove(at: i) } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.tertiary) }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Haal \(stop.name) weg")
+                }
+                .padding(.horizontal, 14).padding(.vertical, 10)
+                .background(Theme.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+            if draft.routeStops.count < 6 {
+                LocationSearchField(mode: .radius, selection: $pick, onPick: { draft.routeStops.append($0) },
+                                    placeholder: draft.routeStops.isEmpty ? "Zoek je vertrekpunt"
+                                        : (draft.routeStops.count == 1 ? "Zoek je bestemming" : "Nog een punt toevoegen (wordt de bestemming)"))
+            }
+            Picker("Vervoer", selection: $draft.transport) {
+                ForEach(RouteTransport.allCases) { Label($0.label, systemImage: $0.symbol).tag($0) }
+            }
+            .pickerStyle(.segmented)
+            if planning {
+                HStack { ProgressView(); Text("Route berekenen…").foregroundStyle(.secondary) }
+            } else if let error {
+                Label(error, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.red)
+            } else if let r = draft.route, draft.routeStops.count >= 2 {
+                Label("\(Format.distance(r.distance)) · \(Int((r.duration / 60).rounded())) min", systemImage: draft.transport.symbol)
+                    .font(.subheadline.weight(.semibold))
+            }
+        }
+        .task(id: draft.routeStopInfo.map { "\($0.latitude),\($0.longitude)" }.joined() + draft.transport.rawValue) {
+            await plan()
+        }
+    }
+
+    private func plan() async {
+        guard draft.routeStops.count >= 2 else { draft.route = nil; return }
+        if let r = draft.route, r.stops == draft.routeStopInfo, r.transport == draft.transport { return }
+        planning = true
+        error = nil
+        defer { planning = false }
+        do {
+            draft.route = try await RoutePlanner.plan(stops: draft.routeStopInfo, transport: draft.transport)
+        } catch is CancellationError {
+        } catch {
+            draft.route = nil
+            self.error = error.localizedDescription
         }
     }
 }

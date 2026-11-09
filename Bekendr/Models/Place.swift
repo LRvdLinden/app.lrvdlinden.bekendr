@@ -24,6 +24,8 @@ final class Place {
     var categoriesRaw: String = NoticeCategory.allCases.map(\.rawValue).joined(separator: ",")
     /// Samengevoegde gebieden (buurten, wijken, woonplaatsen, gemeenten) als JSON.
     var areasJSON: String = ""
+    /// Gevolgde route (alleen iPhone, iPad en Mac) als JSON.
+    var routeJSON: String = ""
     var sortOrder: Int = 0
     var createdAt: Date = Date()
 
@@ -64,6 +66,11 @@ final class Place {
         }
     }
 
+    var route: RouteInfo? {
+        get { try? JSONDecoder().decode(RouteInfo.self, from: Data(routeJSON.utf8)) }
+        set { routeJSON = newValue.flatMap { try? JSONEncoder().encode($0) }.flatMap { String(data: $0, encoding: .utf8) } ?? "" }
+    }
+
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
@@ -76,11 +83,13 @@ final class Place {
         case .radius: "\(shortAddress) · \(Format.distance(radius))"
         case .area:
             areas.count > 1 ? "\(areas.count) gebieden samengevoegd" : "\(shortAddress) · \(areaType?.whole ?? "heel gebied")"
+        case .route: "\(shortAddress) · \(Format.distance(radius)) langs de route"
         }
     }
 
     var shortAddress: String {
         if mode == .area, areas.count > 1 { return areas.map(\.name).joined(separator: " + ") }
+        if mode == .route, let route { return route.title }
         return address.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces) ?? address
     }
 
@@ -125,12 +134,13 @@ struct AreaRef: Codable, Hashable, Identifiable {
 }
 
 enum PlaceMode: String, CaseIterable, Identifiable {
-    case radius, area
+    case radius, area, route
     var id: String { rawValue }
     var label: String {
         switch self {
-        case .radius: "Straal rond adres"
+        case .radius: "Rond adres"
         case .area: "Wijk of gemeente"
+        case .route: "Route"
         }
     }
 }

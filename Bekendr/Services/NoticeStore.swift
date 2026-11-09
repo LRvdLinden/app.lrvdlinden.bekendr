@@ -21,6 +21,7 @@ struct PlaceInfo: Hashable {
     var categories: Set<NoticeCategory>
     var createdAt: Date
     var areas: [AreaRef]
+    var route: RouteInfo?
 
     init(_ place: Place) {
         key = place.key
@@ -40,6 +41,7 @@ struct PlaceInfo: Hashable {
         categories = place.categories
         createdAt = place.createdAt
         areas = place.areas
+        route = place.mode == .route ? place.route : nil
     }
 }
 
@@ -188,6 +190,11 @@ final class NoticeStore {
                     queries.append(q)
                 }
             }
+        case .route:
+            // Rechthoeken langs de route; daarna alleen wat echt binnen de afstand tot de lijn ligt.
+            for box in (place.route?.searchBoxes(margin: place.radius) ?? []).prefix(30) {
+                queries += KoopClient.tiles(for: box).map { KoopClient.boxQuery($0, days: Self.days) }
+            }
         }
 
         var polygons: [[CLLocationCoordinate2D]] = []
@@ -219,8 +226,15 @@ final class NoticeStore {
                     case .area:
                         if !polygons.isEmpty, !PDOKClient.contains(polygons, point) { continue }
                         notice.places[place.key] = -1
+                    case .route:
+                        guard let route = place.route else { continue }
+                        let d = route.distance(to: point)
+                        if d > place.radius * 1.15 { continue }
+                        notice.places[place.key] = d
                     }
                 } else {
+                    // Zonder punt is niet te zeggen of een melding langs de route ligt.
+                    if place.mode == .route { continue }
                     notice.places[place.key] = -1
                 }
                 result[notice.id] = notice

@@ -132,7 +132,8 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(newCount == 1 ? "1 nieuwe" : "\(newCount) nieuwe")
                             .font(.title.weight(.heavy))
-                        Text(place.mode == .radius ? "binnen \(Format.distance(place.radius)) van \(place.shortAddress)"
+                        Text(place.mode == .route ? "binnen \(Format.distance(place.radius)) van de route \(place.shortAddress)"
+                             : place.mode == .radius ? "binnen \(Format.distance(place.radius)) van \(place.shortAddress)"
                                                    : "in \(place.shortAddress)")
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.85))
