@@ -42,6 +42,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.MyLocation
@@ -89,6 +90,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.lrvdlinden.bekendr.BuildConfig
 import app.lrvdlinden.bekendr.MainActivity
+import app.lrvdlinden.bekendr.data.AreaRef
+import app.lrvdlinden.bekendr.data.Bounds
 import app.lrvdlinden.bekendr.data.Category
 import app.lrvdlinden.bekendr.data.Fmt
 import app.lrvdlinden.bekendr.data.Notice
@@ -129,7 +132,7 @@ private fun Segmented(options: List<String>, selected: Int, onSelect: (Int) -> U
 // MARK: - Locatie zoeken
 
 @Composable
-fun LocationSearch(mode: PlaceMode, selection: Pdok.Location?, initial: String = "", onSelect: (Pdok.Location?) -> Unit) {
+fun LocationSearch(mode: PlaceMode, selection: Pdok.Location?, initial: String = "", clearOnPick: Boolean = false, placeholder: String? = null, onSelect: (Pdok.Location?) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var query by remember(mode) { mutableStateOf(selection?.label ?: initial) }
@@ -153,8 +156,8 @@ fun LocationSearch(mode: PlaceMode, selection: Pdok.Location?, initial: String =
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedTextField(query, { query = it; if (selection != null) onSelect(null) }, Modifier.fillMaxWidth(),
-            placeholder = { Text(if (mode == PlaceMode.radius) "Zoek een adres" else "Zoek een wijk, buurt, woonplaats of gemeente") },
+        OutlinedTextField(query, { query = it; if (selection != null && !clearOnPick) onSelect(null) }, Modifier.fillMaxWidth(),
+            placeholder = { Text(placeholder ?: if (mode == PlaceMode.radius) "Zoek een adres" else "Zoek een wijk, buurt, woonplaats of gemeente") },
             leadingIcon = { Icon(Icons.Outlined.Search, null) },
             trailingIcon = { if (busy) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) },
             singleLine = true, shape = RoundedCornerShape(14.dp),
@@ -166,7 +169,7 @@ fun LocationSearch(mode: PlaceMode, selection: Pdok.Location?, initial: String =
                         scope.launch {
                             busy = true
                             runCatching { Pdok.lookup(s.id) }
-                                .onSuccess { onSelect(it); query = it.label; suggestions = emptyList(); message = null }
+                                .onSuccess { onSelect(it); query = if (clearOnPick) "" else it.label; suggestions = emptyList(); message = null }
                                 .onFailure { message = "Deze locatie kon niet worden geladen." }
                             busy = false
                         }
@@ -286,17 +289,18 @@ fun Onboarding(repo: Repository, activity: MainActivity) {
     var step by rememberSaveable { mutableStateOf(0) }
     var mode by remember { mutableStateOf(PlaceMode.radius) }
     var location by remember { mutableStateOf<Pdok.Location?>(null) }
+    var areas by remember { mutableStateOf<List<Pdok.Location>>(emptyList()) }
     var radius by remember { mutableStateOf(500.0) }
     var categories by remember { mutableStateOf(Category.entries.toSet()) }
     var notify by remember { mutableStateOf(true) }
     val hasPlaces = repo.places.value.isNotEmpty()
-    val valid = location != null && (mode == PlaceMode.radius) == (location?.type == "adres") && categories.isNotEmpty()
+    val valid = categories.isNotEmpty() && if (mode == PlaceMode.radius) location?.type == "adres" else areas.isNotEmpty()
     val notifyPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
         repo.updateSettings { it.copy(notify = ok) }
     }
 
     fun finish() {
-        location?.let { saveDraft(repo, null, "Thuis", mode, it, radius, categories) }
+        saveDraft(repo, null, if (mode == PlaceMode.area) areas.first().name else "Thuis", mode, location, areas, radius, categories)
         if (notify) {
             if (Build.VERSION.SDK_INT >= 33) notifyPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
             else repo.updateSettings { it.copy(notify = true) }
@@ -329,12 +333,10 @@ fun Onboarding(repo: Repository, activity: MainActivity) {
                     Text("Kies je eerste locatie", fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Text("Ieder adres in Nederland kan. Later voeg je er meer toe, zoals je werk of een wijk.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Segmented(PlaceMode.entries.map { it.label }, mode.ordinal) { mode = PlaceMode.entries[it]; location = null }
-                    LocationSearch(mode, location) { location = it }
-                    location?.takeIf { valid }?.let {
-                        OsmMap(Modifier.fillMaxWidth().height(190.dp).background(Color.LightGray, RoundedCornerShape(18.dp)),
-                            GeoPoint(it.lat, it.lon), if (mode == PlaceMode.radius) radius else null, it.polygons)
-                    }
+                    Segmented(PlaceMode.entries.map { it.label }, mode.ordinal) { mode = PlaceMode.entries[it] }
+                    if (mode == PlaceMode.area) AreaPicker(areas) { areas = it }
+                    else LocationSearch(mode, location) { location = it }
+                    if (valid) PlacePreview(mode, location, areas, radius)
                 }
                 else -> Column(Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -402,12 +404,75 @@ fun PlaceOptions(mode: PlaceMode, radius: Double, setRadius: (Double) -> Unit, c
     }
 }
 
-fun saveDraft(repo: Repository, existing: Place?, name: String, mode: PlaceMode, loc: Pdok.Location, radius: Double, categories: Set<Category>) {
+fun saveDraft(repo: Repository, existing: Place?, name: String, mode: PlaceMode, loc: Pdok.Location?, areas: List<Pdok.Location>,
+              radius: Double, categories: Set<Category>) {
     val base = existing ?: Place()
-    repo.savePlace(base.copy(
-        name = name.trim().ifEmpty { "Thuis" }, mode = mode, address = loc.label, pdokId = loc.id, type = loc.type,
-        lat = loc.lat, lon = loc.lon, radius = radius, municipality = loc.municipality,
-        bounds = if (mode == PlaceMode.area) loc.bounds else null, categories = categories))
+    val place = if (mode == PlaceMode.radius) {
+        val l = loc ?: return
+        base.copy(name = name.trim().ifEmpty { "Thuis" }, mode = mode, address = l.label, pdokId = l.id, type = l.type,
+            lat = l.lat, lon = l.lon, radius = radius, municipality = l.municipality, bounds = null, categories = categories, areas = emptyList())
+    } else {
+        if (areas.isEmpty()) return
+        val all = areas.mapNotNull { it.bounds }
+        val bounds = if (all.isEmpty()) null else Bounds(all.minOf { it.minLat }, all.maxOf { it.maxLat }, all.minOf { it.minLon }, all.maxOf { it.maxLon })
+        val first = areas.first()
+        base.copy(
+            name = name.trim().ifEmpty { first.name }, mode = mode, address = areas.joinToString(" + ") { it.name },
+            pdokId = first.id, type = first.type, municipality = first.municipality,
+            lat = bounds?.let { (it.minLat + it.maxLat) / 2 } ?: areas.map { it.lat }.average(),
+            lon = bounds?.let { (it.minLon + it.maxLon) / 2 } ?: areas.map { it.lon }.average(),
+            radius = radius, bounds = bounds, categories = categories,
+            areas = areas.map { AreaRef(it.id, it.name, it.type, it.municipality, it.lat, it.lon, it.bounds) })
+    }
+    repo.savePlace(place)
+}
+
+fun AreaRef.toLocation() = Pdok.Location(id, name, type, name, lat, lon, municipality, bounds, emptyList())
+
+/** Kies één of meer gebieden die samen één locatie vormen. */
+@Composable
+fun AreaPicker(areas: List<Pdok.Location>, onChange: (List<Pdok.Location>) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (areas.isNotEmpty()) Card {
+            areas.forEachIndexed { i, a ->
+                Row(Modifier.padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(a.name, fontWeight = FontWeight.SemiBold)
+                        Text(a.type.replaceFirstChar { it.uppercase() }, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    IconButton(onClick = { onChange(areas.filterNot { it.id == a.id }) }) { Icon(Icons.Outlined.Close, "Haal ${a.name} weg") }
+                }
+                if (i < areas.lastIndex) HorizontalDivider()
+            }
+        }
+        LocationSearch(PlaceMode.area, null, clearOnPick = true,
+            placeholder = if (areas.isEmpty()) null else "Voeg nog een buurt, wijk of gemeente toe") { picked ->
+            if (picked != null && areas.none { it.id == picked.id }) onChange(areas + picked)
+        }
+        Text(if (areas.size > 1) "Deze ${areas.size} gebieden worden samen één locatie, met één lijst meldingen."
+             else "Je kunt meerdere buurten of wijken kiezen; ze worden samen één locatie.",
+            fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/** Kaartje met de straal of met alle gekozen gebieden; ontbrekende grenzen worden opgehaald. */
+@Composable
+fun PlacePreview(mode: PlaceMode, location: Pdok.Location?, areas: List<Pdok.Location>, radius: Double) {
+    var polygons by remember { mutableStateOf<Map<String, List<List<Pair<Double, Double>>>>>(emptyMap()) }
+    LaunchedEffect(areas.map { it.id }) {
+        if (mode != PlaceMode.area) return@LaunchedEffect
+        for (a in areas) if (a.polygons.isEmpty() && a.id !in polygons && a.id.isNotEmpty()) {
+            runCatching { Pdok.lookup(a.id).polygons }.onSuccess { polygons = polygons + (a.id to it) }
+        }
+    }
+    val modifier = Modifier.fillMaxWidth().height(190.dp).background(Color.LightGray, RoundedCornerShape(18.dp))
+    if (mode == PlaceMode.radius) {
+        location?.let { OsmMap(modifier, GeoPoint(it.lat, it.lon), radius) }
+    } else if (areas.isNotEmpty()) {
+        val rings = areas.flatMap { a -> a.polygons.ifEmpty { polygons[a.id] ?: emptyList() } }
+        OsmMap(modifier, GeoPoint(areas.map { it.lat }.average(), areas.map { it.lon }.average()), null, rings,
+            homes = areas.map { Place(name = it.name, lat = it.lat, lon = it.lon) })
+    }
 }
 
 // MARK: - Jouw buurt
@@ -664,16 +729,17 @@ fun EditorScreen(repo: Repository, place: Place?, initialQuery: String, pop: () 
     var name by remember { mutableStateOf(place?.name ?: if (repo.places.value.isEmpty()) "Thuis" else "Locatie ${repo.places.value.size + 1}") }
     var mode by remember { mutableStateOf(place?.mode ?: PlaceMode.radius) }
     var location by remember {
-        mutableStateOf(place?.takeIf { it.lat != 0.0 }?.let { Pdok.Location(it.pdokId, it.address, it.type, it.shortAddress, it.lat, it.lon, it.municipality, it.bounds, emptyList()) })
+        mutableStateOf(place?.takeIf { it.lat != 0.0 && it.mode == PlaceMode.radius }?.let { Pdok.Location(it.pdokId, it.address, it.type, it.shortAddress, it.lat, it.lon, it.municipality, it.bounds, emptyList()) })
     }
+    var areas by remember { mutableStateOf(place?.allAreas?.map { it.toLocation() } ?: emptyList()) }
     var radius by remember { mutableStateOf(place?.radius ?: 500.0) }
     var categories by remember { mutableStateOf(place?.categories ?: Category.entries.toSet()) }
     var confirmDelete by remember { mutableStateOf(false) }
-    val valid = location != null && (mode == PlaceMode.radius) == (location?.type == "adres") && categories.isNotEmpty() && name.isNotBlank()
+    val valid = categories.isNotEmpty() && name.isNotBlank() && if (mode == PlaceMode.radius) location?.type == "adres" else areas.isNotEmpty()
 
     Column(Modifier.fillMaxSize().imePadding()) {
         Header(if (place == null) "Nieuwe locatie" else "Locatie", pop) {
-            TextButton(onClick = { location?.let { saveDraft(repo, place, name, mode, it, radius, categories) }; pop() }, enabled = valid) {
+            TextButton(onClick = { saveDraft(repo, place, name, mode, location, areas, radius, categories); pop() }, enabled = valid) {
                 Text("Bewaar", fontWeight = FontWeight.Bold)
             }
         }
@@ -681,12 +747,14 @@ fun EditorScreen(repo: Repository, place: Place?, initialQuery: String, pop: () 
             OutlinedTextField(name, { name = it }, Modifier.fillMaxWidth(), label = { Text("Naam") }, singleLine = true, shape = RoundedCornerShape(14.dp))
             Segmented(PlaceMode.entries.map { it.label }, mode.ordinal) {
                 val m = PlaceMode.entries[it]
-                if (m != mode) { mode = m; if ((m == PlaceMode.radius) != (location?.type == "adres")) location = null }
+                if (m != mode) mode = m
             }
-            LocationSearch(mode, location, initialQuery) { location = it }
-            location?.takeIf { valid }?.let {
-                OsmMap(Modifier.fillMaxWidth().height(190.dp), GeoPoint(it.lat, it.lon), if (mode == PlaceMode.radius) radius else null, it.polygons)
-            }
+            if (mode == PlaceMode.area) AreaPicker(areas) { list ->
+                // Eerste gebied bij een nieuwe locatie: neem de naam over als die nog standaard is.
+                if (place == null && areas.isEmpty() && list.isNotEmpty() && (name == "Thuis" || name.startsWith("Locatie "))) name = list.first().name
+                areas = list
+            } else LocationSearch(mode, location, initialQuery) { location = it }
+            if (valid) PlacePreview(mode, location, areas, radius)
             PlaceOptions(mode, radius, { radius = it }, categories, { categories = it })
             if (place != null) {
                 if (confirmDelete) {
@@ -806,6 +874,7 @@ fun WhatsNewScreen(pop: () -> Unit) {
             Text("Versie 1.0", fontWeight = FontWeight.Bold, fontSize = 18.sp)
             listOf(
                 "Officiële bekendmakingen rond je adres, wijk of gemeente",
+                "Buurten en wijken samenvoegen tot één locatie",
                 "Meldingen als lijst of op de kaart",
                 "Bewaren, prullenbak en gelezen",
                 "Melding bij iets nieuws, met stille uren",

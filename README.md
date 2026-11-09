@@ -8,6 +8,7 @@ Gebaseerd op het idee van de Homey-app *Bekendmakingen NL* en de werking van Omg
 
 ## Wat de app doet
 - Meerdere locaties: een adres met een straal (100 m – 2 km) of een hele woonplaats, wijk, buurt of gemeente.
+- Gebieden samenvoegen: kies meerdere buurten, wijken, woonplaatsen of gemeenten die samen één locatie vormen (één naam, één kaart, één lijst zonder dubbele meldingen).
 - Per locatie kies je de categorieën: Vergunningen, Verkeer, Bomen en kap, Evenementen, Ruimtelijke plannen, Regels en overig.
 - **Jouw buurt**: hoeveel er nieuw is, vandaag en de afgelopen 7 dagen, met tegels per categorie.
 - **Meldingen**: als lijst of op de kaart (rondjes in de categoriekleur met een wit icoon), gelezen/ongelezen, bewaren en prullenbak (30 dagen).

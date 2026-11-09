@@ -157,12 +157,17 @@ class Repository private constructor(private val dir: File) {
         if (place.mode == PlaceMode.radius) {
             queries += Koop.radiusQuery(place.lat, place.lon, place.radius)
         } else {
-            place.bounds?.let { b -> queries += Koop.tiles(b).map(Koop::boxQuery) } ?: run { queries += Koop.radiusQuery(place.lat, place.lon, 1500.0) }
-            Koop.nameQuery(place.shortAddress)?.let { queries += it }
-            if (place.type == "gemeente") Koop.creatorQuery(place.municipality.ifEmpty { place.shortAddress })?.let { queries += it }
+            // Elk gebied apart opvragen; samen vormen ze één locatie.
+            for (area in place.allAreas) {
+                area.bounds?.let { b -> queries += Koop.tiles(b).map(Koop::boxQuery) } ?: run { queries += Koop.radiusQuery(area.lat, area.lon, 1500.0) }
+                Koop.nameQuery(area.name)?.let { queries += it }
+                if (area.type == "gemeente") Koop.creatorQuery(area.municipality.ifEmpty { area.name })?.let { queries += it }
+            }
         }
-        val polygons = if (place.mode == PlaceMode.area && place.pdokId.isNotEmpty()) {
-            polygonCache[place.pdokId] ?: runCatching { Pdok.lookup(place.pdokId).polygons }.getOrDefault(emptyList()).also { polygonCache[place.pdokId] = it }
+        val polygons = if (place.mode == PlaceMode.area) {
+            place.allAreas.filter { it.id.isNotEmpty() }.flatMap { a ->
+                polygonCache[a.id] ?: runCatching { Pdok.lookup(a.id).polygons }.getOrDefault(emptyList()).also { polygonCache[a.id] = it }
+            }
         } else emptyList()
 
         val result = mutableMapOf<String, Notice>()

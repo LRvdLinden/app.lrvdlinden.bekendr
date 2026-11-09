@@ -22,6 +22,8 @@ final class Place {
     var minLongitude: Double = 0
     var maxLongitude: Double = 0
     var categoriesRaw: String = NoticeCategory.allCases.map(\.rawValue).joined(separator: ",")
+    /// Samengevoegde gebieden (buurten, wijken, woonplaatsen, gemeenten) als JSON.
+    var areasJSON: String = ""
     var sortOrder: Int = 0
     var createdAt: Date = Date()
 
@@ -47,6 +49,21 @@ final class Place {
         set { categoriesRaw = NoticeCategory.allCases.filter(newValue.contains).map(\.rawValue).joined(separator: ",") }
     }
 
+    /// De gebieden die samen deze locatie vormen. Oudere locaties met één gebied worden als één gebied gelezen.
+    var areas: [AreaRef] {
+        get {
+            if let list = try? JSONDecoder().decode([AreaRef].self, from: Data(areasJSON.utf8)), !list.isEmpty { return list }
+            guard mode == .area, !pdokID.isEmpty else { return [] }
+            let first = address.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces) ?? address
+            return [AreaRef(id: pdokID, name: first, type: areaTypeRaw, municipality: municipality,
+                            latitude: latitude, longitude: longitude,
+                            minLat: minLatitude, maxLat: maxLatitude, minLon: minLongitude, maxLon: maxLongitude)]
+        }
+        set {
+            areasJSON = (try? JSONEncoder().encode(newValue)).flatMap { String(data: $0, encoding: .utf8) } ?? ""
+        }
+    }
+
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
@@ -57,15 +74,54 @@ final class Place {
     var detail: String {
         switch mode {
         case .radius: "\(shortAddress) · \(Format.distance(radius))"
-        case .area: "\(shortAddress) · \(areaType?.whole ?? "heel gebied")"
+        case .area:
+            areas.count > 1 ? "\(areas.count) gebieden samengevoegd" : "\(shortAddress) · \(areaType?.whole ?? "heel gebied")"
         }
     }
 
     var shortAddress: String {
-        address.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces) ?? address
+        if mode == .area, areas.count > 1 { return areas.map(\.name).joined(separator: " + ") }
+        return address.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces) ?? address
     }
 
     var isConfigured: Bool { latitude != 0 && longitude != 0 }
+}
+
+/// Eén gebied binnen een (samengevoegde) locatie.
+struct AreaRef: Codable, Hashable, Identifiable {
+    var id: String
+    var name: String
+    var type: String
+    var municipality: String
+    var latitude: Double
+    var longitude: Double
+    var minLat: Double
+    var maxLat: Double
+    var minLon: Double
+    var maxLon: Double
+
+    var bounds: KoopClient.Bounds? {
+        maxLat > minLat && maxLon > minLon ? .init(minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon) : nil
+    }
+
+    init(id: String, name: String, type: String, municipality: String, latitude: Double, longitude: Double,
+         minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) {
+        self.id = id; self.name = name; self.type = type; self.municipality = municipality
+        self.latitude = latitude; self.longitude = longitude
+        self.minLat = minLat; self.maxLat = maxLat; self.minLon = minLon; self.maxLon = maxLon
+    }
+
+    init(_ l: PDOKClient.Location) {
+        self.init(id: l.id, name: l.name, type: l.type, municipality: l.municipality,
+                  latitude: l.latitude, longitude: l.longitude,
+                  minLat: l.bounds?.minLat ?? 0, maxLat: l.bounds?.maxLat ?? 0,
+                  minLon: l.bounds?.minLon ?? 0, maxLon: l.bounds?.maxLon ?? 0)
+    }
+
+    var location: PDOKClient.Location {
+        .init(id: id, label: name, type: type, name: name, latitude: latitude, longitude: longitude,
+              municipality: municipality, bounds: bounds, polygons: [])
+    }
 }
 
 enum PlaceMode: String, CaseIterable, Identifiable {

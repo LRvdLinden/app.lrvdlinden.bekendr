@@ -20,6 +20,7 @@ struct PlaceInfo: Hashable {
     var bounds: KoopClient.Bounds?
     var categories: Set<NoticeCategory>
     var createdAt: Date
+    var areas: [AreaRef]
 
     init(_ place: Place) {
         key = place.key
@@ -38,6 +39,7 @@ struct PlaceInfo: Hashable {
         }
         categories = place.categories
         createdAt = place.createdAt
+        areas = place.areas
     }
 }
 
@@ -173,24 +175,30 @@ final class NoticeStore {
         case .radius:
             queries = [KoopClient.radiusQuery(lat: place.latitude, lon: place.longitude, radius: place.radius, days: Self.days)]
         case .area:
-            if let bounds = place.bounds {
-                queries = KoopClient.tiles(for: bounds).map { KoopClient.boxQuery($0, days: Self.days) }
-            } else {
-                queries = [KoopClient.radiusQuery(lat: place.latitude, lon: place.longitude, radius: 1500, days: Self.days)]
-            }
-            if let q = KoopClient.nameQuery(place.areaName, days: Self.days) { queries.append(q) }
-            if place.areaType == .gemeente, let q = KoopClient.creatorQuery(place.municipality.isEmpty ? place.areaName : place.municipality, days: Self.days) {
-                queries.append(q)
+            // Elk gebied apart opvragen; samen vormen ze één locatie.
+            let areas = place.areas
+            for area in areas {
+                if let bounds = area.bounds {
+                    queries += KoopClient.tiles(for: bounds).map { KoopClient.boxQuery($0, days: Self.days) }
+                } else {
+                    queries.append(KoopClient.radiusQuery(lat: area.latitude, lon: area.longitude, radius: 1500, days: Self.days))
+                }
+                if let q = KoopClient.nameQuery(area.name, days: Self.days) { queries.append(q) }
+                if area.type == "gemeente", let q = KoopClient.creatorQuery(area.municipality.isEmpty ? area.name : area.municipality, days: Self.days) {
+                    queries.append(q)
+                }
             }
         }
 
         var polygons: [[CLLocationCoordinate2D]] = []
-        if place.mode == .area, !place.pdokID.isEmpty {
-            if let cached = areaPolygons[place.pdokID] {
-                polygons = cached
-            } else if let location = try? await pdok.lookup(place.pdokID) {
-                polygons = location.polygons
-                areaPolygons[place.pdokID] = polygons
+        if place.mode == .area {
+            for area in place.areas where !area.id.isEmpty {
+                if let cached = areaPolygons[area.id] {
+                    polygons += cached
+                } else if let location = try? await pdok.lookup(area.id) {
+                    areaPolygons[area.id] = location.polygons
+                    polygons += location.polygons
+                }
             }
         }
 

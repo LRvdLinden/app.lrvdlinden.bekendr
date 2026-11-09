@@ -2,16 +2,16 @@ import SwiftUI
 import SwiftData
 import MapKit
 
-/// Kaartje met de straal of het gebied van een locatie.
+/// Kaartje met de straal, of met alle gebieden van een (samengevoegde) locatie.
 struct PlaceMapPreview: View {
-    let location: PDOKClient.Location
+    let locations: [PDOKClient.Location]
     let mode: PlaceMode
     let radius: Double
+    @State private var polygons: [String: [[CLLocationCoordinate2D]]] = [:]
 
     var body: some View {
-        let center = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-        Map(position: .constant(position(center)), interactionModes: []) {
-            if mode == .radius {
+        Map(position: .constant(position), interactionModes: []) {
+            if mode == .radius, let center = locations.first?.coordinate {
                 MapCircle(center: center, radius: radius)
                     .foregroundStyle(Theme.accentFill.opacity(0.12))
                     .stroke(Theme.accentFill.opacity(0.7), lineWidth: 2)
@@ -20,31 +20,51 @@ struct PlaceMapPreview: View {
                         .overlay(Circle().stroke(.white, lineWidth: 3))
                 }
             } else {
-                ForEach(Array(location.polygons.enumerated()), id: \.offset) { _, ring in
-                    MapPolygon(coordinates: ring)
-                        .foregroundStyle(Theme.accentFill.opacity(0.12))
-                        .stroke(Theme.accentFill.opacity(0.7), lineWidth: 2)
-                }
-                if location.polygons.isEmpty {
-                    Marker(location.name, coordinate: center).tint(Theme.accentFill)
+                ForEach(locations, id: \.id) { area in
+                    let rings = polygons[area.id] ?? area.polygons
+                    ForEach(Array(rings.enumerated()), id: \.offset) { _, ring in
+                        MapPolygon(coordinates: ring)
+                            .foregroundStyle(Theme.accentFill.opacity(0.12))
+                            .stroke(Theme.accentFill.opacity(0.7), lineWidth: 2)
+                    }
+                    if rings.isEmpty {
+                        Marker(area.name, coordinate: area.coordinate).tint(Theme.accentFill)
+                    }
                 }
             }
         }
         .mapStyle(.standard(pointsOfInterest: .excludingAll))
         .frame(height: 190)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityLabel(mode == .radius ? "Kaart met een straal van \(Format.distance(radius))" : "Kaart van \(location.name)")
+        .accessibilityLabel(mode == .radius ? "Kaart met een straal van \(Format.distance(radius))"
+                                            : "Kaart van \(locations.map(\.name).joined(separator: ", "))")
+        .task(id: locations.map(\.id)) {
+            // Grenzen ophalen voor gebieden die zonder grens zijn bewaard.
+            guard mode == .area else { return }
+            for area in locations where area.polygons.isEmpty && polygons[area.id] == nil && !area.id.isEmpty {
+                if let full = try? await PDOKClient().lookup(area.id) { polygons[area.id] = full.polygons }
+            }
+        }
     }
 
-    private func position(_ center: CLLocationCoordinate2D) -> MapCameraPosition {
-        if mode == .area, let b = location.bounds {
-            let span = MKCoordinateSpan(latitudeDelta: (b.maxLat - b.minLat) * 1.25, longitudeDelta: (b.maxLon - b.minLon) * 1.25)
-            return .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (b.minLat + b.maxLat) / 2,
-                                                                             longitude: (b.minLon + b.maxLon) / 2), span: span))
+    private var position: MapCameraPosition {
+        if mode == .area {
+            let bounds = locations.compactMap(\.bounds)
+            if let minLat = bounds.map(\.minLat).min(), let maxLat = bounds.map(\.maxLat).max(),
+               let minLon = bounds.map(\.minLon).min(), let maxLon = bounds.map(\.maxLon).max() {
+                let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * 1.25, longitudeDelta: (maxLon - minLon) * 1.25)
+                return .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2,
+                                                                                 longitude: (minLon + maxLon) / 2), span: span))
+            }
         }
+        let center = locations.first?.coordinate ?? CLLocationCoordinate2D(latitude: 52.2, longitude: 5.5)
         let meters = max(radius, 150) * 2.8
         return .region(MKCoordinateRegion(center: center, latitudinalMeters: meters, longitudinalMeters: meters))
     }
+}
+
+extension PDOKClient.Location {
+    var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: latitude, longitude: longitude) }
 }
 
 /// Instellingen voor de straal en de categorieën.
@@ -118,17 +138,23 @@ struct PlaceEditorView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
 
-                LocationSearchField(mode: draft.mode, selection: $draft.location, initialQuery: initialQuery)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                Group {
+                    if draft.mode == .area {
+                        AreaPicker(areas: $draft.areas)
+                    } else {
+                        LocationSearchField(mode: .radius, selection: $draft.location, initialQuery: initialQuery)
+                    }
+                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
 
-                if let location = draft.location, draft.isValid {
-                    PlaceMapPreview(location: location, mode: draft.mode, radius: draft.radius)
+                if draft.isValid {
+                    PlaceMapPreview(locations: draft.previewLocations, mode: draft.mode, radius: draft.radius)
                         .listRowInsets(EdgeInsets())
                 }
             } footer: {
                 if draft.mode == .area {
-                    Text("Je krijgt de bekendmakingen binnen het hele gebied, ook die voor de hele gemeente gelden.")
+                    Text("Je krijgt de bekendmakingen binnen alle gekozen gebieden samen, ook die voor een hele gemeente gelden.")
                 }
             }
 
@@ -167,6 +193,14 @@ struct PlaceEditorView: View {
             if let place { draft = PlaceDraft(place) } else {
                 draft.name = places.isEmpty ? "Thuis" : "Locatie \(places.count + 1)"
                 draft.symbol = places.isEmpty ? "house" : "mappin"
+            }
+        }
+        .onChange(of: draft.areas.count) { old, new in
+            // Eerste gebied bij een nieuwe locatie: neem de naam over als die nog standaard is.
+            if place == nil, old == 0, new > 0, draft.name == "Thuis" || draft.name.hasPrefix("Locatie "),
+               let first = draft.areas.first {
+                draft.name = first.name
+                draft.symbol = "mappin"
             }
         }
         .onChange(of: draft.mode) { _, mode in

@@ -81,14 +81,20 @@ struct OnboardingView: View {
                     ForEach(PlaceMode.allCases) { Text($0.label).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                LocationSearchField(mode: draft.mode, selection: $draft.location)
-                if let location = draft.location, draft.isValid {
-                    PlaceMapPreview(location: location, mode: draft.mode, radius: draft.radius)
+                if draft.mode == .area {
+                    AreaPicker(areas: $draft.areas)
+                } else {
+                    LocationSearchField(mode: .radius, selection: $draft.location)
+                }
+                if draft.isValid {
+                    PlaceMapPreview(locations: draft.previewLocations, mode: draft.mode, radius: draft.radius)
                 }
             }
             .padding(24)
         }
-        .onChange(of: draft.mode) { _, _ in draft.location = nil }
+        .onChange(of: draft.mode) { _, mode in
+            if mode == .area { draft.location = nil } else { draft.areas = [] }
+        }
     }
 
     private var chooseOptions: some View {
@@ -98,8 +104,8 @@ struct OnboardingView: View {
                            text: "Stel in hoe ver om je heen je wilt kijken en welke soorten bekendmakingen je wilt zien.")
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                if let location = draft.location {
-                    PlaceMapPreview(location: location, mode: draft.mode, radius: draft.radius)
+                if draft.isValid {
+                    PlaceMapPreview(locations: draft.previewLocations, mode: draft.mode, radius: draft.radius)
                         .listRowInsets(EdgeInsets())
                 }
             }

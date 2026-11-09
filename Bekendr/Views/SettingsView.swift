@@ -160,6 +160,7 @@ struct WhatsNewView: View {
             List {
                 Section("Versie 1.0") {
                     Label("Officiële bekendmakingen rond je adres, wijk of gemeente", systemImage: "mappin.and.ellipse")
+                    Label("Buurten en wijken samenvoegen tot één locatie", systemImage: "square.on.square.dashed")
                     Label("Meldingen als lijst of op de kaart", systemImage: "map")
                     Label("Bewaren, prullenbak en gelezen via iCloud op al je apparaten", systemImage: "icloud")
                     Label("Melding bij iets nieuws, met stille uren", systemImage: "bell.badge")

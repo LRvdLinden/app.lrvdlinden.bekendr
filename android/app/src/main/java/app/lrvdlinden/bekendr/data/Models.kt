@@ -42,6 +42,18 @@ enum class PlaceMode(val label: String) { radius("Straal rond adres"), area("Wij
 @Serializable
 data class Bounds(val minLat: Double, val maxLat: Double, val minLon: Double, val maxLon: Double)
 
+/** Eén gebied binnen een (samengevoegde) locatie. */
+@Serializable
+data class AreaRef(
+    val id: String,
+    val name: String,
+    val type: String,
+    val municipality: String = "",
+    val lat: Double,
+    val lon: Double,
+    val bounds: Bounds? = null,
+)
+
 /** Een gevolgde locatie. Op Android alleen lokaal bewaard. */
 @Serializable
 data class Place(
@@ -58,9 +70,22 @@ data class Place(
     val bounds: Bounds? = null,
     val categories: Set<Category> = Category.entries.toSet(),
     val createdAt: Long = System.currentTimeMillis(),
+    /** Samengevoegde gebieden; leeg bij een adres met straal. */
+    val areas: List<AreaRef> = emptyList(),
 ) {
-    val shortAddress get() = address.substringBefore(",").trim()
-    val detail get() = if (mode == PlaceMode.radius) "$shortAddress · ${Fmt.distance(radius)}" else "$shortAddress · heel gebied"
+    /** De gebieden van deze locatie, ook voor oudere locaties met één gebied. */
+    val allAreas: List<AreaRef>
+        get() = areas.ifEmpty {
+            if (mode == PlaceMode.area && pdokId.isNotEmpty())
+                listOf(AreaRef(pdokId, address.substringBefore(",").trim(), type, municipality, lat, lon, bounds))
+            else emptyList()
+        }
+    val shortAddress get() = if (mode == PlaceMode.area && areas.size > 1) areas.joinToString(" + ") { it.name } else address.substringBefore(",").trim()
+    val detail get() = when {
+        mode == PlaceMode.radius -> "$shortAddress · ${Fmt.distance(radius)}"
+        areas.size > 1 -> "${areas.size} gebieden samengevoegd"
+        else -> "$shortAddress · heel gebied"
+    }
 }
 
 @Serializable
