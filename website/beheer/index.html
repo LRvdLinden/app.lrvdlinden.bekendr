@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bekendr beheer</title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://vbhkewgyujzgbukkbtml.supabase.co; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+@font-face { font-family: "Schibsted Grotesk"; src: url("/assets/fonts/schibsted-grotesk.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/assets/fonts/inter.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+:root {
+  --paper: #F4F5F8; --card: #FFFFFF; --ink: #121726; --muted: #5B6275; --line: #E3E5EC;
+  --blue: #2747E8; --blue-soft: #E4E9FD; --bad: #C0262D; --warn: #B4530D;
+  --iphone: #2747E8; --ipad: #7B4BD6; --mac: #0F8A8A; --android: #2E8B57; --other: #8A91A3;
+  --display: "Schibsted Grotesk", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0C1020; --card: #151A2C; --ink: #E9ECF4; --muted: #98A0B3; --line: #262D3D;
+    --blue: #8A9DFF; --blue-soft: #1D2547; --bad: #FF7A80; --warn: #F2A15E;
+    --iphone: #6F86FF; --ipad: #A584F0; --mac: #3FC1C1; --android: #5CC488; --other: #7C8396;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.5 var(--body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; }
+header .actions { display: flex; gap: 8px; }
+@media (max-width: 520px) { header .spacer { display: none; } header .actions { width: 100%; } header .actions button { flex: 1; justify-content: center; } }
+header img { width: 40px; height: 40px; border-radius: 9px; }
+header h1 { font: 800 22px/1.1 var(--display); margin: 0; letter-spacing: -.01em; }
+header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+header .spacer { flex: 1; }
+button, .btn { font: 600 14px var(--body); border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 8px 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+button:disabled { opacity: .55; cursor: default; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+.login { max-width: 380px; margin: 8vh auto 0; text-align: center; }
+.login img { width: 84px; height: 84px; border-radius: 19px; }
+.login h1 { font: 800 24px var(--display); margin: 16px 0 4px; }
+.login p.sub { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+.login form { display: grid; gap: 10px; text-align: left; }
+input { font: 15px var(--body); padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); width: 100%; }
+input:focus { outline: 2px solid var(--blue); outline-offset: 0; }
+.login .hint { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+.err { color: var(--bad); font-size: 13.5px; min-height: 1.2em; margin: 0; }
+.note { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+.note.warn { color: var(--warn); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile .label { font-weight: 600; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
+.tile .label i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.tile .num { font: 800 30px/1.15 var(--display); font-variant-numeric: tabular-nums; margin-top: 4px; }
+.tile .small { color: var(--muted); font-size: 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+@media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+h2 { font: 800 17px var(--display); margin: 0 0 10px; }
+.row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.row:first-of-type { border-top: 0; }
+.row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+.row small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+.foot { color: var(--muted); font-size: 12.5px; margin-top: 10px; }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+svg.chart { width: 100%; height: 220px; display: block; }
+svg.chart text { fill: var(--muted); font: 11px var(--body); }
+svg.chart .grid { stroke: var(--line); }
+.tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--paper); font-size: 12px; padding: 6px 8px; border-radius: 8px; white-space: nowrap; opacity: 0; transition: opacity .1s; z-index: 5; }
+.updated { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 18px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section id="login" class="login" hidden>
+    <img src="/assets/icon-512.png" alt="">
+    <h1>Bekendr beheer</h1>
+    <p class="sub">Downloads op iPhone, iPad, Mac en Android</p>
+    <form id="loginForm" class="card" autocomplete="on">
+      <input id="user" name="username" placeholder="Gebruikersnaam" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      <input id="pass" name="password" type="password" placeholder="Wachtwoord" autocomplete="current-password" required>
+      <p class="err" id="loginErr" role="alert"></p>
+      <button class="primary" id="loginBtn" type="submit">Inloggen</button>
+    </form>
+    <p class="hint">De gedeelde beheer-inlog, dezelfde als in LRbeheer. Je sessie geldt 12 uur en blijft alleen in dit tabblad.</p>
+  </section>
+
+  <section id="app" hidden>
+    <header>
+      <img src="/assets/icon.png" alt="">
+      <div>
+        <h1>Bekendr beheer</h1>
+        <p>Downloads per apparaat</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="actions">
+        <button id="refresh" type="button">Vernieuwen</button>
+        <button id="logout" type="button">Uitloggen</button>
+      </div>
+    </header>
+
+    <p class="err" id="appErr" role="alert"></p>
+    <p class="note warn" id="ascNote" hidden>App Store Connect is nog niet gekoppeld; alleen Android wordt geteld. Zet <code>P8_APPSTORE_CONNECT</code> en <code>VENDOR_NUMBER_APPSTORE_CONNECT</code> in app.lrvdlinden.secrets en start <em>LRbeheer push</em>.</p>
+
+    <div class="tiles">
+      <div class="card tile"><div class="label" style="color:var(--blue)">Totaal</div><div class="num" id="tTotal">–</div><div class="small">Apple + Android</div></div>
+      <div class="card tile"><div class="label"><i style="background:var(--iphone)"></i>iPhone</div><div class="num" id="tIphone">–</div></div>
+      <div class="card tile"><div class="label"><i style="background:var(--ipad)"></i>iPad</div><div class="num" id="tIpad">–</div></div>
+      <div class="card tile"><div class="label"><i style="background:var(--mac)"></i>Mac</div><div class="num" id="tMac">–</div></div>
+      <div class="card tile"><div class="label"><i style="background:var(--android)"></i>Android</div><div class="num" id="tAndroid">–</div><div class="small">APK-downloads</div></div>
+    </div>
+
+    <div class="card">
+      <div class="chart-head"><h2>Downloads per dag</h2><span class="foot" style="margin:0">30 dagen</span></div>
+      <svg class="chart" id="chart" role="img" aria-label="Downloads per dag"></svg>
+      <div class="legend">
+        <span><i style="background:var(--iphone)"></i>iPhone</span>
+        <span><i style="background:var(--ipad)"></i>iPad</span>
+        <span><i style="background:var(--mac)"></i>Mac</span>
+        <span><i style="background:var(--other)"></i>Overig</span>
+        <span><i style="background:var(--android)"></i>Android</span>
+      </div>
+      <p class="foot" id="chartEmpty" hidden>Nog geen downloads in de afgelopen 30 dagen. Android telt per dag vanaf de eerste meting; Apple komt een dag later binnen.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Apple</h2>
+        <div id="appleRows"></div>
+        <p class="foot">Uit de dagelijkse verkoopoverzichten van App Store Connect; die komen een dag later binnen.</p>
+      </div>
+      <div class="card">
+        <h2>Android</h2>
+        <div id="androidRows"></div>
+        <p class="foot">Downloads van de APK in GitHub Releases, ook via de vaste link naar de nieuwste versie.</p>
+      </div>
+    </div>
+    <p class="updated" id="updated"></p>
+  </section>
+</main>
+<div class="tip" id="tip"></div>
+
+<script>
+(() => {
+  "use strict";
+  const API = "https://vbhkewgyujzgbukkbtml.supabase.co/functions/v1/lrbeheer";
+  const KEY = "bekendr.beheer.session";
+  const $ = (id) => document.getElementById(id);
+  const nf = new Intl.NumberFormat("nl-NL");
+  const dShort = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "short" });
+  const dLong = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  const dTime = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  const store = {
+    get() { try { const s = JSON.parse(sessionStorage.getItem(KEY) || "null"); return s && s.expires * 1000 > Date.now() + 60000 ? s : null; } catch { return null; } },
+    set(v) { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch { /* alleen in geheugen */ } mem = v; },
+    clear() { try { sessionStorage.removeItem(KEY); } catch { /* leeg */ } mem = null; },
+  };
+  let mem = store.get();
+
+  async function call(body, token) {
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers.Authorization = "Bearer " + token;
+    let r;
+    try { r = await fetch(API, { method: "POST", headers, body: JSON.stringify(body), cache: "no-store", credentials: "omit" }); }
+    catch { throw new Error("Geen verbinding met de server."); }
+    if (r.status === 401) { const e = new Error(body.action === "bekendr_login" ? "Onjuiste gebruikersnaam of wachtwoord." : "Je sessie is verlopen. Log opnieuw in."); e.auth = true; throw e; }
+    if (r.status === 503) throw new Error("Het Bekendr-beheer is nog niet ingesteld op de server.");
+    if (!r.ok) throw new Error("De server gaf HTTP " + r.status + ".");
+    return r.json();
+  }
+
+  function show(signedIn) {
+    $("login").hidden = signedIn;
+    $("app").hidden = !signedIn;
+    if (!signedIn) setTimeout(() => $("user").focus(), 0);
+  }
+
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("loginBtn");
+    btn.disabled = true; btn.textContent = "Bezig…"; $("loginErr").textContent = "";
+    try {
+      const r = await call({ action: "bekendr_login", user: $("user").value.trim(), password: $("pass").value });
+      store.set({ token: r.token, expires: r.expires });
+      $("pass").value = "";
+      show(true);
+      load();
+    } catch (err) {
+      $("loginErr").textContent = err.message;
+    } finally {
+      btn.disabled = false; btn.textContent = "Inloggen";
+    }
+  });
+
+  $("logout").addEventListener("click", () => { store.clear(); show(false); });
+  $("refresh").addEventListener("click", () => load());
+
+  let busy = false;
+  async function load() {
+    if (!mem || busy) return;
+    busy = true; $("refresh").disabled = true; $("refresh").textContent = "Bezig…";
+    try {
+      const s = await call({ action: "bekendr_stats" }, mem.token);
+      render(s);
+      $("appErr").textContent = "";
+    } catch (err) {
+      if (err.auth) { store.clear(); show(false); $("loginErr").textContent = err.message; }
+      else $("appErr").textContent = err.message;
+    } finally {
+      busy = false; $("refresh").disabled = false; $("refresh").textContent = "Vernieuwen";
+    }
+  }
+
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+  function row(label, value, sub) {
+    const r = el("div", "row");
+    const l = el("span", "", label);
+    if (sub) l.appendChild(el("small", "", sub));
+    r.append(l, el("span", "", value));
+    return r;
+  }
+  const parseDay = (d) => { const [y, m, dd] = d.split("-").map(Number); return new Date(y, m - 1, dd); };
+
+  function render(s) {
+    const dev = (n) => (s.apple.by_device && s.apple.by_device[n]) || 0;
+    const t = s.apple.totals || {};
+    $("ascNote").hidden = !!s.apple.configured;
+    $("tTotal").textContent = nf.format((t.download || 0) + (s.android.total || 0));
+    $("tIphone").textContent = nf.format(dev("iPhone"));
+    $("tIpad").textContent = nf.format(dev("iPad"));
+    $("tMac").textContent = nf.format(dev("Mac"));
+    $("tAndroid").textContent = nf.format(s.android.total || 0);
+
+    const apple = $("appleRows"); apple.replaceChildren();
+    apple.append(row("Eerste downloads", nf.format(t.download || 0)), row("Opnieuw gedownload", nf.format(t.redownload || 0)), row("Updates", nf.format(t.update || 0)));
+    const other = Object.entries(s.apple.by_device || {}).filter(([k]) => !["iPhone", "iPad", "Mac"].includes(k)).reduce((a, [, v]) => a + v, 0);
+    if (other) apple.append(row("Andere apparaten", nf.format(other)));
+    if (s.apple.last_day) apple.append(row("Laatste dag van App Store Connect", dLong.format(parseDay(s.apple.last_day))));
+
+    const android = $("androidRows"); android.replaceChildren();
+    if (!s.android.available) android.append(el("p", "note warn", "GitHub was niet bereikbaar; probeer het zo opnieuw."));
+    for (const r of s.android.releases || []) {
+      const when = r.published_at ? dTime.format(new Date(r.published_at)) : "";
+      android.append(row(r.name, nf.format(r.downloads), when));
+    }
+    if (!(s.android.releases || []).length && s.android.available) android.append(el("p", "foot", "Nog geen releases."));
+
+    lastDays = s.days || [];
+    drawChart(lastDays);
+    $("updated").textContent = s.synced_at ? "Bijgewerkt " + dTime.format(new Date(s.synced_at)) : "";
+  }
+
+  let lastDays = null;
+  const SERIES = [["iPhone", "--iphone"], ["iPad", "--ipad"], ["Mac", "--mac"], ["other", "--other", "Overig"], ["android", "--android", "Android"]];
+  function drawChart(days) {
+    const svg = $("chart");
+    const NS = "http://www.w3.org/2000/svg";
+    svg.replaceChildren();
+    const total = days.reduce((a, d) => a + SERIES.reduce((b, [k]) => b + (d[k] || 0), 0), 0);
+    $("chartEmpty").hidden = total > 0;
+    svg.style.display = total > 0 ? "" : "none";
+    if (!total) return;
+    const W = Math.max(320, svg.clientWidth || 600), H = 220, L = 34, R = 6, T = 8, B = 24;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const max = Math.max(1, ...days.map((d) => SERIES.reduce((b, [k]) => b + (d[k] || 0), 0)));
+    const step = niceStep(max);
+    const top = Math.ceil(max / step) * step;
+    const y = (v) => T + (H - T - B) * (1 - v / top);
+    for (let v = 0; v <= top; v += step) {
+      const ln = document.createElementNS(NS, "line");
+      ln.setAttribute("x1", L); ln.setAttribute("x2", W - R); ln.setAttribute("y1", y(v)); ln.setAttribute("y2", y(v)); ln.setAttribute("class", "grid");
+      const tx = document.createElementNS(NS, "text");
+      tx.setAttribute("x", L - 6); tx.setAttribute("y", y(v) + 4); tx.setAttribute("text-anchor", "end"); tx.textContent = nf.format(v);
+      svg.append(ln, tx);
+    }
+    const slot = (W - L - R) / days.length, bw = Math.max(3, Math.min(22, slot * 0.7));
+    const css = getComputedStyle(document.documentElement);
+    days.forEach((d, i) => {
+      const x = L + slot * i + (slot - bw) / 2;
+      let acc = 0;
+      const g = document.createElementNS(NS, "g");
+      for (const [k, varName] of SERIES) {
+        const v = d[k] || 0;
+        if (!v) continue;
+        const rect = document.createElementNS(NS, "rect");
+        rect.setAttribute("x", x); rect.setAttribute("width", bw);
+        rect.setAttribute("y", y(acc + v)); rect.setAttribute("height", Math.max(0, y(acc) - y(acc + v)));
+        rect.setAttribute("rx", 2); rect.setAttribute("fill", css.getPropertyValue(varName).trim());
+        g.append(rect);
+        acc += v;
+      }
+      const hit = document.createElementNS(NS, "rect");
+      hit.setAttribute("x", L + slot * i); hit.setAttribute("width", slot); hit.setAttribute("y", T); hit.setAttribute("height", H - T - B); hit.setAttribute("fill", "transparent");
+      hit.addEventListener("pointerenter", (e) => tip(e, d));
+      hit.addEventListener("pointermove", (e) => tip(e, d));
+      hit.addEventListener("pointerleave", () => { $("tip").style.opacity = 0; });
+      g.append(hit);
+      svg.append(g);
+      if ((days.length - 1 - i) % 7 === 0) {
+        const tx = document.createElementNS(NS, "text");
+        tx.setAttribute("x", L + slot * i + slot / 2); tx.setAttribute("y", H - 6); tx.setAttribute("text-anchor", "middle");
+        tx.textContent = dShort.format(parseDay(d.day));
+        svg.append(tx);
+      }
+    });
+  }
+  function niceStep(max) {
+    const raw = max / 4, p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const n = raw / p;
+    return Math.max(1, (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p);
+  }
+  function tip(e, d) {
+    const t = $("tip");
+    const parts = SERIES.filter(([k]) => d[k]).map(([k, , label]) => (label || k) + " " + nf.format(d[k]));
+    t.textContent = dShort.format(parseDay(d.day)) + ": " + (parts.length ? parts.join(" · ") : "geen");
+    t.style.opacity = 1;
+    const x = Math.min(window.innerWidth - t.offsetWidth - 8, e.clientX + 12);
+    t.style.left = Math.max(8, x) + "px"; t.style.top = (e.clientY - 36) + "px";
+  }
+  addEventListener("resize", () => { if (lastDays) drawChart(lastDays); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { if (lastDays) drawChart(lastDays); });
+
+  show(!!mem);
+  if (mem) load();
+})();
+</script>
+</body>
+</html>
