@@ -1,10 +1,10 @@
 # Bekendr – postteksten (NL, algemene promotie)
 
-Link: https://bekendr.lrvdlinden.app · Android-app nu te downloaden, iPhone, iPad en Mac volgen binnenkort.
+Link: https://bekendr.lrvdlinden.app · Download in de App Store en Google Play.
 
 ## Instagram / Facebook (post 1:1 en 4:5, story)
 Komt er een dakkapel bij de buren, gaat je straat dicht of worden er bomen gekapt? Met Bekendr zie je alle officiële bekendmakingen rond je adres, je buurt of je hele gemeente op één plek. Zonder account, rechtstreeks van de overheid. 🏡
-Download via bekendr.lrvdlinden.app (link in bio).
+Download in de App Store en Google Play, of via bekendr.lrvdlinden.app (link in bio).
 #Bekendr #bekendmakingen #buurt #vergunning #gemeente #wijk
 
 ## LinkedIn
@@ -18,7 +18,7 @@ Vergunningen, verkeersbesluiten, kap en evenementen rond je adres: Bekendr zet a
 Geen posttekst nodig. Gebruik als omslagfoto van een pagina over Bekendr.
 
 ## Alt-teksten
-- `instagram-post-1080x1080.png`: Blauwe banner met het Bekendr-icoon en de tekst "Weet wat er in je buurt gebeurt. Vergunningen, verkeer en kap rond je adres." Twee iPhones tonen het overzicht "Jouw buurt" met 4 nieuwe bekendmakingen en een kaart met gekleurde punten. Onderaan: bekendr.lrvdlinden.app, Android-app nu, iPhone, iPad en Mac binnenkort.
+- `instagram-post-1080x1080.png`: Blauwe banner met het Bekendr-icoon en de tekst "Weet wat er in je buurt gebeurt. Vergunningen, verkeer en kap rond je adres." Twee iPhones tonen het overzicht "Jouw buurt" met 4 nieuwe bekendmakingen en een kaart met gekleurde punten. Onderaan: bekendr.lrvdlinden.app en Download in de App Store en Google Play.
 - `instagram-post-1080x1350.png`: Blauwe banner met de vraag "Wat speelt er in jouw straat?" en "Alle bekendmakingen rond je adres, op één plek." Twee iPhones tonen de lijst met meldingen en het overzicht per categorie. Onderaan de link bekendr.lrvdlinden.app.
 - `story-1080x1920.png`: Staande banner met het Bekendr-icoon, "Weet wat er in je buurt gebeurt" en "Rond je adres, je buurt of je hele gemeente." Twee iPhones met het overzicht en de kaart, onderaan de link bekendr.lrvdlinden.app.
 - `linkedin-post-1200x627.png`: Brede blauwe banner met links "Weet wat er in je buurt gebeurt. Officiële bekendmakingen van de overheid rond je adres. Zonder account." en de link bekendr.lrvdlinden.app; rechts twee iPhones met de app.
