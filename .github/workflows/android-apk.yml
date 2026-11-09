@@ -36,14 +36,25 @@ jobs:
             echo "BEKENDR_KEYSTORE_PATH=$RUNNER_TEMP/bekendr.jks" >> "$GITHUB_ENV"
             echo "Eigen sleutel gebruikt."
           else
-            echo "::warning::Geen BEKENDR_KEYSTORE_BASE64-secret: de APK is ondertekend met een tijdelijke debugsleutel."
+            echo "::warning::Geen BEKENDR_KEYSTORE_BASE64-secret: de APK is ondertekend met een tijdelijke sleutel. Updates over een eerdere versie heen lukken dan niet."
+            keytool -genkeypair -keystore "$RUNNER_TEMP/tijdelijk.jks" -storetype PKCS12 -alias bekendr -keyalg RSA -keysize 2048 \
+              -validity 3650 -storepass tijdelijk -keypass tijdelijk -dname "CN=Bekendr tijdelijk" >/dev/null 2>&1
+            {
+              echo "BEKENDR_KEYSTORE_PATH=$RUNNER_TEMP/tijdelijk.jks"
+              echo "BEKENDR_TEMP_KEY=1"
+            } >> "$GITHUB_ENV"
           fi
       - name: Bouwen
         env:
-          BEKENDR_KEYSTORE_PASSWORD: ${{ secrets.BEKENDR_KEYSTORE_PASSWORD }}
-          BEKENDR_KEY_ALIAS: ${{ secrets.BEKENDR_KEY_ALIAS }}
-          BEKENDR_KEY_PASSWORD: ${{ secrets.BEKENDR_KEY_PASSWORD }}
+          SECRET_STORE_PASSWORD: ${{ secrets.BEKENDR_KEYSTORE_PASSWORD }}
+          SECRET_KEY_ALIAS: ${{ secrets.BEKENDR_KEY_ALIAS }}
+          SECRET_KEY_PASSWORD: ${{ secrets.BEKENDR_KEY_PASSWORD }}
         run: |
+          if [ "${BEKENDR_TEMP_KEY:-}" = "1" ]; then
+            export BEKENDR_KEYSTORE_PASSWORD=tijdelijk BEKENDR_KEY_ALIAS=bekendr BEKENDR_KEY_PASSWORD=tijdelijk
+          else
+            export BEKENDR_KEYSTORE_PASSWORD="$SECRET_STORE_PASSWORD" BEKENDR_KEY_ALIAS="$SECRET_KEY_ALIAS" BEKENDR_KEY_PASSWORD="$SECRET_KEY_PASSWORD"
+          fi
           chmod +x gradlew
           set -o pipefail
           ./gradlew --no-daemon assembleRelease 2>&1 | tee build.log
