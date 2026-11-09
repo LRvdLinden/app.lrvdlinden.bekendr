@@ -2,8 +2,8 @@ import SwiftUI
 import Observation
 
 enum AppConfig {
-    static let privacyURL = URL(string: "https://github.com/LRvdLinden/app.lrvdlinden.bekendr/blob/main/PRIVACY.md")!
-    static let supportURL = URL(string: "https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues")!
+    static let privacyURL = URL(string: "https://bekendr.lrvdlinden.app/privacy/")!
+    static let supportURL = URL(string: "https://bekendr.lrvdlinden.app/support/")!
     static let sourceURL = URL(string: "https://www.officielebekendmakingen.nl")!
     static let refreshTaskID = "app.lrvdlinden.bekendr.refresh"
 }

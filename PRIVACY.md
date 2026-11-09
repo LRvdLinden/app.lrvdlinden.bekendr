@@ -28,4 +28,4 @@ Laat je in de app weten dat er iets niet klopt aan een bekendmaking, dan gaat na
 - Face ID, Touch ID of je vingerafdruk worden door het besturingssysteem gecontroleerd; Bekendr krijgt die gegevens nooit.
 
 ## Contact
-Vragen of opmerkingen: [maak een melding op GitHub](https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues).
+Vragen of opmerkingen: via de [supportpagina](https://bekendr.lrvdlinden.app/support/).

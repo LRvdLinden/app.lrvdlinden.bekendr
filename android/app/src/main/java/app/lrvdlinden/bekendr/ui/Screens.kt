@@ -882,9 +882,9 @@ fun SettingsScreen(repo: Repository, activity: MainActivity, push: (Screen) -> U
             Card {
                 LinkRow("Over Bekendr") { push(Screen.About) }
                 HorizontalDivider()
-                LinkRow("Privacyverklaring") { context.openUrl("https://github.com/LRvdLinden/app.lrvdlinden.bekendr/blob/main/PRIVACY.md") }
+                LinkRow("Privacyverklaring") { context.openUrl("https://bekendr.lrvdlinden.app/privacy/") }
                 HorizontalDivider()
-                LinkRow("Support en contact") { context.openUrl("https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues") }
+                LinkRow("Support en contact") { context.openUrl("https://bekendr.lrvdlinden.app/support/") }
                 HorizontalDivider()
                 LinkRow("Wat is nieuw") { push(Screen.WhatsNew) }
                 HorizontalDivider()

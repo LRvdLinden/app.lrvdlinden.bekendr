@@ -27,4 +27,4 @@ Notifications and lock
 - Face ID, Touch ID or your fingerprint are checked by the operating system; Bekendr never receives that data.
 
 Contact
-Questions or comments: https://github.com/LRvdLinden/app.lrvdlinden.bekendr/issues
+Questions or comments: via the support page https://bekendr.lrvdlinden.app/support/
