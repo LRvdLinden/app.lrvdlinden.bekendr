@@ -25,7 +25,6 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Thunderstorm
 import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material.icons.outlined.WaterDrop
-import androidx.compose.material.icons.outlined.Foggy
 import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -203,7 +202,7 @@ data class Weather(val temp: Double, val code: Int, val day: Boolean) {
     }
     val icon: ImageVector get() = when (code) {
         0, 1 -> if (day) Icons.Outlined.WbSunny else Icons.Outlined.NightsStay
-        45, 48 -> Icons.Outlined.Foggy
+        45, 48 -> Icons.Outlined.Cloud
         in 51..67, in 80..82 -> Icons.Outlined.WaterDrop
         in 71..77, 85, 86 -> Icons.Outlined.AcUnit
         in 95..99 -> Icons.Outlined.Thunderstorm
