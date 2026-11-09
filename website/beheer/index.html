@@ -75,6 +75,22 @@ svg.chart text { fill: var(--muted); font: 11px var(--body); }
 svg.chart .grid { stroke: var(--line); }
 .tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--paper); font-size: 12px; padding: 6px 8px; border-radius: 8px; white-space: nowrap; opacity: 0; transition: opacity .1s; z-index: 5; }
 .updated { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 18px; }
+.fb-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.fb-head h2 { margin: 0; }
+.badge { background: var(--blue); color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
+.fb-head label { margin-left: auto; font-size: 13.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.fb { border-top: 1px solid var(--line); padding: 12px 0; }
+.fb:first-of-type { border-top: 0; }
+.fb .top { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+.fb .state { margin-left: auto; font-size: 12px; font-weight: 700; }
+.fb .state.new { color: var(--blue); }
+.fb .state.done { color: var(--muted); }
+.fb .title { font-size: 14px; margin-top: 4px; }
+.fb .msg { background: var(--paper); border-radius: 10px; padding: 8px 10px; margin-top: 6px; font-size: 14px; white-space: pre-wrap; }
+.fb .meta { color: var(--muted); font-size: 12.5px; margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.fb .meta a { color: var(--blue); }
+.fb .acts { display: flex; gap: 8px; margin-top: 8px; }
+.fb .acts button { padding: 5px 10px; font-size: 13px; }
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -144,6 +160,12 @@ svg.chart .grid { stroke: var(--line); }
         <p class="foot">Downloads van de APK in GitHub Releases, ook via de vaste link naar de nieuwste versie.</p>
       </div>
     </div>
+    <div class="card" style="margin-top:16px">
+      <div class="fb-head"><h2>Feedback</h2><span class="badge" id="fbCount" hidden></span>
+        <label><input type="checkbox" id="fbOnlyOpen" checked style="width:auto"> Alleen nieuwe</label></div>
+      <div id="fbList"></div>
+      <p class="foot">Feedback uit de Bekendr-app op een bekendmaking: reden en toelichting, zonder account of persoonsgegevens.</p>
+    </div>
     <p class="updated" id="updated"></p>
   </section>
 </main>
@@ -195,6 +217,7 @@ svg.chart .grid { stroke: var(--line); }
       $("pass").value = "";
       show(true);
       load();
+      loadFeedback();
     } catch (err) {
       $("loginErr").textContent = err.message;
     } finally {
@@ -203,7 +226,55 @@ svg.chart .grid { stroke: var(--line); }
   });
 
   $("logout").addEventListener("click", () => { store.clear(); show(false); });
-  $("refresh").addEventListener("click", () => load());
+  $("refresh").addEventListener("click", () => { load(); loadFeedback(); });
+  $("fbOnlyOpen").addEventListener("change", () => loadFeedback());
+
+  const REASONS = { locatie: "Locatie klopt niet", categorie: "Verkeerde categorie", gemeente: "Verkeerde gemeente", link: "Link werkt niet", anders: "Anders" };
+  const PLATFORMS = { ios: "iPhone", ipados: "iPad", macos: "Mac", android: "Android" };
+  function setCount(n) { const b = $("fbCount"); b.hidden = !n; b.textContent = n + " nieuw"; }
+  async function loadFeedback() {
+    if (!mem) return;
+    try {
+      const body = { action: "bekendr_feedback_list" };
+      if ($("fbOnlyOpen").checked) body.status = "nieuw";
+      const r = await call(body, mem.token);
+      setCount(r.open || 0);
+      renderFeedback(r.items || []);
+    } catch (err) {
+      if (err.auth) { store.clear(); show(false); $("loginErr").textContent = err.message; }
+      else $("fbList").replaceChildren(el("p", "err", err.message));
+    }
+  }
+  async function updateFeedback(item, params) {
+    try {
+      const r = await call({ action: "bekendr_feedback_update", id: item.id, ...params }, mem.token);
+      setCount(r.open || 0);
+      loadFeedback();
+    } catch (err) { $("appErr").textContent = err.message; }
+  }
+  function renderFeedback(items) {
+    const box = $("fbList"); box.replaceChildren();
+    if (!items.length) { box.append(el("p", "foot", $("fbOnlyOpen").checked ? "Geen nieuwe feedback." : "Nog geen feedback.")); return; }
+    for (const it of items) {
+      const d = el("div", "fb");
+      const top = el("div", "top", REASONS[it.reason] || it.reason);
+      const open = it.status === "nieuw";
+      top.append(el("span", "state " + (open ? "new" : "done"), open ? "Nieuw" : "Afgehandeld"));
+      d.append(top, el("div", "title", it.notice_title || it.notice_id));
+      if (it.message) d.append(el("div", "msg", it.message));
+      const meta = el("div", "meta");
+      meta.append(el("span", "", dTime.format(new Date(it.at))), el("span", "", "· " + (PLATFORMS[it.platform] || it.platform) + " " + (it.app_version || "")));
+      if (it.notice_url) { const a = el("a", "", "Open publicatie"); a.href = it.notice_url; a.target = "_blank"; a.rel = "noopener noreferrer"; meta.append(a); }
+      d.append(meta);
+      const acts = el("div", "acts");
+      const b1 = el("button", "", open ? "Afgehandeld" : "Heropen"); b1.type = "button";
+      b1.addEventListener("click", () => updateFeedback(it, { status: open ? "afgehandeld" : "nieuw" }));
+      const b2 = el("button", "", "Verwijder"); b2.type = "button";
+      b2.addEventListener("click", () => { if (confirm("Deze feedback verwijderen?")) updateFeedback(it, { delete: true }); });
+      acts.append(b1, b2); d.append(acts);
+      box.append(d);
+    }
+  }
 
   let busy = false;
   async function load() {
@@ -331,7 +402,7 @@ svg.chart .grid { stroke: var(--line); }
   matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { if (lastDays) drawChart(lastDays); });
 
   show(!!mem);
-  if (mem) load();
+  if (mem) { load(); loadFeedback(); }
 })();
 </script>
 </body>
