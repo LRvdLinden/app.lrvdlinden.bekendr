@@ -103,7 +103,9 @@ class Repository private constructor(private val dir: File) {
     // MARK: Ophalen
 
     /** Haalt bekendmakingen op voor alle locaties; geeft de nieuwe terug. */
-    suspend fun refresh(): List<Notice> = mutex.withLock {
+    suspend fun refresh(): List<Notice> = mutex.withLock { refreshLocked() }
+
+    private suspend fun refreshLocked(): List<Notice> {
         val places = _places.value.filter { it.lat != 0.0 }
         if (places.isEmpty()) return emptyList()
         _loading.value = true

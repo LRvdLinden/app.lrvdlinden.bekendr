@@ -104,7 +104,7 @@ struct PlaceEditorView: View {
             Section {
                 TextField("Naam", text: $draft.name)
                 Picker("Pictogram", selection: $draft.symbol) {
-                    ForEach(PlaceDraft.symbols, id: \.0) { symbol, label in
+                    ForEach(PlaceDraft.symbols, id: \.symbol) { symbol, label in
                         Label(label, systemImage: symbol).tag(symbol)
                     }
                 }

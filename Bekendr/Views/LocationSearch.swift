@@ -56,7 +56,7 @@ struct PlaceDraft: Equatable {
         }
     }
 
-    static let symbols: [(String, String)] = [
+    static let symbols: [(symbol: String, label: String)] = [
         ("house", "Thuis"), ("briefcase", "Werk"), ("heart", "Familie"), ("mappin", "Overig"),
     ]
 }
