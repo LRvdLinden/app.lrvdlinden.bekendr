@@ -466,3 +466,8 @@ footer { padding: 0 0 50px; }
 .app-badge img { width: 64px; height: 64px; border-radius: 15px; box-shadow: 0 14px 28px -12px rgba(39,71,232,.65); }
 .app-badge b { display: block; font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
 .app-badge span { font-size: 15px; color: var(--muted); }
+
+/* Officiële App Store-badge */
+.store-badge { display: block; width: fit-content; margin: 0 auto; align-self: center; line-height: 0; border-radius: 12px; }
+.store-badge img { width: 200px; height: auto; display: block; }
+.store-badge:focus-visible { outline: 3px solid var(--blue, #2747E8); outline-offset: 3px; }
