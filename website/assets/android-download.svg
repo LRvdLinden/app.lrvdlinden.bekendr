@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="246" height="82" viewBox="0 0 246 82" role="img" aria-labelledby="title">
+<title id="title">Download voor Android</title>
+<rect x="1" y="1" width="244" height="80" rx="11.5" fill="#080808" stroke="#9EA0A8" stroke-width="1.5"/>
+<g fill="#2747E8" transform="translate(11,7)">
+  <path d="M10 24a23 23 0 0 1 46 0H10Z"/>
+  <rect x="10" y="27" width="46" height="30" rx="3.5"/>
+  <rect x="1" y="27" width="7" height="28" rx="3.5"/>
+  <rect x="58" y="27" width="7" height="28" rx="3.5"/>
+  <rect x="19" y="52" width="9" height="13" rx="4.5"/>
+  <rect x="38" y="52" width="9" height="13" rx="4.5"/>
+</g>
+<g stroke="#2747E8" stroke-width="3" stroke-linecap="round">
+  <path d="M28 19 23 11M49 19l5-8"/>
+</g>
+<g fill="#080808"><circle cx="31" cy="27" r="2"/><circle cx="46" cy="27" r="2"/></g>
+<text x="89" y="32" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400">Download voor</text>
+<text x="89" y="62" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" letter-spacing="-.8">Android</text>
+</svg>
